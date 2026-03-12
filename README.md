@@ -4,6 +4,8 @@
 
 If you've ever returned to a module after a few weeks and completely forgotten how to access that one specific hidden mode, or what the 16 different LED colors actually mean, this repository may be for you.
 
+## [DEMO](https://othmar52.github.io/eurocheats/index.htm)  
+
 ## The Philosophy
 
 * **Essentials Only:** This is *not* a replacement for the official manuals. There is no deep-dive patching philosophy here. EuroCheats provides only the necessary fragments: button combos, scale lists, and algorithm overviews. 
