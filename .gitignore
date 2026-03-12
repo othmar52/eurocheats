@@ -1,0 +1,8 @@
+moduleselection.txt
+index.htm
+
+.DS_Store
+Thumbs.db
+
+__pycache__/
+*.py[cod]
