@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import os
 import sys
 import glob
@@ -32,6 +34,7 @@ def generate_sample_list():
     print("Copy it to 'moduleselection.txt' to match your own rack.")
 
 def build_cheat_sheets():
+    """Reads the selection file and builds the index.htm with all chosen cheat sheets."""
     selection_file = "moduleselection.txt"
     modules_to_build = []
     
@@ -62,11 +65,20 @@ def build_cheat_sheets():
     
     # 2. Generate HTML
     for index, filepath in enumerate(modules_to_build):
-        filename = os.path.basename(filepath)
+        # Normalize slashes to safely split the path regardless of the OS
+        normalized_path = filepath.replace('\\', '/')
+        parts = normalized_path.split('/')
         
-        # Since filenames are clean now (e.g. "Morphagene.htm"), 
-        # we simply remove the file extension for the button.
-        clean_name = os.path.splitext(filename)[0]
+        # Check if it follows the deep structure: modules/Manufacturer/Module/Cheat.htm
+        if len(parts) >= 4:
+            module_name = parts[-2] # e.g. "Milky Way"
+            # cheat_name = os.path.splitext(parts[-1])[0] # e.g. "Algorithms"
+            # clean_name = f"{module_name} ({cheat_name})"
+            clean_name = f"{module_name}"
+        else:
+            # Fallback for flat or intermediate structure
+            filename = os.path.basename(filepath)
+            clean_name = os.path.splitext(filename)[0]
         
         card_id = f"module-{index}"
         active_class = "active" if index == 0 else ""
@@ -95,7 +107,7 @@ def build_cheat_sheets():
     print(f"\nSuccessfully built: index.htm now contains {len(modules_to_build)} modules.")
 
 if __name__ == "__main__":
-    # Check if the script was called with an argument
+    # Check if the script was called with the list argument
     if len(sys.argv) > 1 and sys.argv[1] == "-list":
         generate_sample_list()
     else:

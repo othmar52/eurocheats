@@ -18,16 +18,16 @@ If you've ever returned to a module after a few weeks and completely forgotten h
 
 ## Currently Included Modules
 
+* **DIY** - Clockwerk
+* **Endorphin.es** - Milky Way
 * **Erica Synths** - Dual FX
-* **Forge TME** - Vhikk X
 * **Erica Synths** - Pico DSP
 * **Erica Synths** - Pico Voice
-* **Seaside Modular** - Proteus
 * **Folktek** - Alter 1
-* **DIY** - clockwerk
-* **Endorphin.es** - Milky Way
-* **Multiple Manufacturers** - nRings
-* **Robaux** - 3PT
-* **Ladik** - Quantiser
-* **Mutable Instruments** - Plaits
+* **Forge TME** - Vhikk X
+* **Ladik** - Easy Quantizer
 * **Make Noise** - Morphagene
+* **Mutable instruments** - Plaits
+* **Other** - nRings
+* **Robaux** - 3PT
+* **Seaside Modular** - Proteus
