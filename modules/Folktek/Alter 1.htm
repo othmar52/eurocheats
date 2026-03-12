@@ -1,0 +1,190 @@
+<style>
+  @import url("https://fonts.googleapis.com/css2?family=Jura:wght@500;700&family=Oswald:wght@400&family=Inter:wght@400;700&display=swap");
+
+  .alter-theme {
+    font-family: "Inter", sans-serif;
+    background-color: #0c0c0c; /* Sehr dunkles Schwarz/Grau, fast wie eine nackte Platine */
+    padding: 2vh 2vw;
+    border-radius: 8px;
+    color: #d1d5db;
+    box-sizing: border-box;
+
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 90px);
+    min-height: 400px;
+  }
+
+  .alter-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 2vh;
+    border-bottom: 2px solid #b87333; /* Folktek Kupfer-Akzentfarbe */
+    padding-bottom: 1vh;
+    flex-shrink: 0;
+  }
+
+  .alter-brand {
+    font-size: clamp(10px, 1vh + 0.5vw, 18px);
+    text-transform: uppercase;
+    letter-spacing: 4px; /* Weites Spacing für den edlen Look */
+    color: #b87333; /* Kupfer */
+    font-family: "Jura", sans-serif;
+    margin-bottom: -5px;
+  }
+
+  .alter-title {
+    color: #ffffff;
+    font-family: "Jura", sans-serif;
+    font-size: clamp(24px, 4vh + 2vw, 70px);
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin: 0;
+    line-height: 1;
+  }
+
+  .alter-content {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1vh 3vw;
+    flex: 1;
+    align-items: stretch;
+  }
+
+  /* Im Querformat/Desktop auf 2 Spalten aufteilen */
+  @media (min-width: 768px), (orientation: landscape) {
+    .alter-content {
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: repeat(4, 1fr);
+      grid-auto-flow: column;
+    }
+    .alter-row:nth-child(4),
+    .alter-row:nth-child(7) {
+      border-bottom: none;
+    }
+  }
+
+  .alter-row {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #1a1a1a;
+    padding: 1vh 0;
+  }
+
+  /* Hexagonale Touch-Plate Imitation in Kupfer-Optik */
+  .touch-pad {
+    width: clamp(30px, 6vh + 1vw, 60px);
+    height: clamp(30px, 6vh + 1vw, 60px);
+    /* Hexagon Clip-Path für den ultimativen Folktek-Look */
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    background: radial-gradient(circle at 30% 30%, #e6a87c, #b87333, #5e3219);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    margin-right: clamp(15px, 2vw, 30px);
+    position: relative;
+  }
+
+  /* Die Nummer in der Touch-Plate */
+  .touch-num {
+    color: #0c0c0c;
+    font-family: "Jura", sans-serif;
+    font-weight: 700;
+    font-size: clamp(16px, 3vh + 0.5vw, 30px);
+  }
+
+  .algo-name {
+    font-size: clamp(14px, 2.5vh + 0.5vw, 35px);
+    font-weight: 400;
+    color: #e0e0e0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-family: "Oswald", sans-serif;
+    line-height: 1.2;
+  }
+
+  /* Print-Optimierung */
+  @media print {
+    .alter-theme {
+      background-color: #fff;
+      padding: 0;
+      color: #000;
+      height: auto !important;
+      border: none;
+    }
+    .alter-title {
+      color: #000;
+    }
+    .alter-brand {
+      color: #000;
+    }
+    .alter-header {
+      border-bottom-color: #000;
+    }
+    .alter-row {
+      border-bottom-color: #ccc;
+      page-break-inside: avoid;
+    }
+    .algo-name {
+      color: #222;
+    }
+    /* Vereinfachte Pads für den Schwarzweißdruck */
+    .touch-pad {
+      background: #eee;
+      border: 2px solid #000;
+      clip-path: none;
+      border-radius: 50%;
+    }
+    .touch-num {
+      color: #000;
+    }
+  }
+</style>
+
+<div class="alter-theme">
+  <div class="alter-header">
+    <div>
+      <div class="alter-brand">Folktek</div>
+      <h1 class="alter-title">ALTER 1</h1>
+    </div>
+  </div>
+
+  <div class="alter-content">
+    <div class="alter-row">
+      <div class="touch-pad"><span class="touch-num">1</span></div>
+      <div class="algo-name">Long Delay</div>
+    </div>
+
+    <div class="alter-row">
+      <div class="touch-pad"><span class="touch-num">2</span></div>
+      <div class="algo-name">Tight, Notated Granular Delay</div>
+    </div>
+
+    <div class="alter-row">
+      <div class="touch-pad"><span class="touch-num">3</span></div>
+      <div class="algo-name">Plate Reverb</div>
+    </div>
+
+    <div class="alter-row">
+      <div class="touch-pad"><span class="touch-num">4</span></div>
+      <div class="algo-name">Shimmering Reverb</div>
+    </div>
+
+    <div class="alter-row">
+      <div class="touch-pad"><span class="touch-num">5</span></div>
+      <div class="algo-name">Distortion Multi-Filter</div>
+    </div>
+
+    <div class="alter-row">
+      <div class="touch-pad"><span class="touch-num">6</span></div>
+      <div class="algo-name">Pitch Delay</div>
+    </div>
+
+    <div class="alter-row">
+      <div class="touch-pad"><span class="touch-num">7</span></div>
+      <div class="algo-name">Stutter Glitch</div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eurorack Cheat Sheets</title>
+    <style>
+        body {
+            background-color: #121212;
+            color: #ffffff;
+            font-family: sans-serif;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        nav {
+            background-color: #222;
+            padding: 10px;
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+        }
+
+        nav button {
+            background: #333; color: white; border: none; padding: 10px; cursor: pointer;
+            border-radius: 4px; font-family: monospace;
+        }
+
+        nav button.active { background: #555; }
+
+        .card-container {
+            display: none;
+            padding: 20px;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .card-container.active { display: block; }
+
+        @media print {
+            @page { size: A5 portrait; margin: 0; }
+            body { background-color: #121212 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            nav { display: none !important; } 
+            .card-container { display: block !important; page-break-after: always; height: 100vh; overflow: hidden; padding: 15px; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        [[NAVIGATION]]
+    </nav>
+
+    [[MODULES]]
+
+    <script>
+        function showCard(cardId) {
+            document.querySelectorAll('.card-container').forEach(card => card.classList.remove('active'));
+            document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById(cardId).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+    </script>
+</body>
+</html>

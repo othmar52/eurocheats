@@ -1,0 +1,227 @@
+<style>
+  @import url("https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Inter:wght@400;700&display=swap");
+
+  .proteus-theme {
+    font-family: "Inter", sans-serif;
+    background-color: #121212;
+    padding: 2vh 2vw;
+    border-radius: 8px;
+    color: #e0e0e0;
+    box-sizing: border-box;
+
+    /* Fullscreen Setup */
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 90px);
+    min-height: 400px;
+  }
+
+  .proteus-header {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1.5vh;
+    border-bottom: 2px solid #fff;
+    padding-bottom: 1vh;
+    flex-shrink: 0;
+  }
+
+  .proteus-brand {
+    font-size: clamp(10px, 1vh + 0.5vw, 20px);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #888;
+    font-weight: 700;
+  }
+
+  .proteus-title {
+    color: #ffffff;
+    font-size: clamp(24px, 4vh + 2vw, 70px);
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin: 0;
+    line-height: 1;
+  }
+
+  /* Flexibler Container für die Seiten */
+  .proteus-content {
+    display: flex;
+    flex-direction: column; /* Standard: Untereinander (Hochformat) */
+    flex-grow: 1;
+    gap: 2vh;
+  }
+
+  .page-section {
+    display: flex;
+    flex-direction: column;
+    flex: 1; /* Dehnt die Sektion gleichmäßig */
+  }
+
+  .page-title {
+    background-color: #2a2a2a;
+    padding: 1vh 1vw;
+    font-family: "Roboto Mono", monospace;
+    font-size: clamp(12px, 2vh + 0.5vw, 35px);
+    font-weight: 700;
+    border-left: 4px solid #4a90e2;
+    color: #fff;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+  }
+
+  .scale-row {
+    display: flex;
+    flex-grow: 1; /* Jede Skala dehnt sich gleichmäßig in die Höhe */
+    align-items: center;
+    border-bottom: 1px solid #2a2a2a;
+    font-size: clamp(11px, 1.8vh + 0.5vw, 35px);
+    line-height: 1.2;
+  }
+
+  .scale-row:last-child {
+    border-bottom: none;
+  }
+
+  .col-num {
+    font-family: "Roboto Mono", monospace;
+    color: #4a90e2;
+    width: 15%;
+    min-width: 40px;
+    font-weight: 700;
+  }
+
+  .col-name {
+    width: 35%;
+    font-weight: 700;
+    color: #ffffff;
+  }
+
+  .col-notes {
+    width: 50%;
+    color: #aaa;
+    font-size: 0.85em; /* Noten immer etwas kleiner als der Rest */
+  }
+
+  /* AUTOMATISCHER SPALTEN-MODUS FÜR QUERFORMAT / DESKTOP */
+  @media (orientation: landscape) {
+    .proteus-content {
+      flex-direction: row; /* Nebeneinander anordnen */
+      gap: 3vw;
+    }
+  }
+
+  /* Print-Optimierung */
+  @media print {
+    .proteus-theme {
+      background-color: #fff;
+      padding: 0;
+      color: #000;
+      height: 100vh;
+      border: none;
+    }
+    .proteus-title {
+      color: #000;
+      border-bottom-color: #000;
+    }
+    .proteus-header {
+      border-bottom-color: #000;
+    }
+    .page-title {
+      background-color: #eee;
+      color: #000;
+      border-left-color: #4a90e2;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .scale-row {
+      border-bottom-color: #ccc;
+      color: #222;
+    }
+    .col-name {
+      color: #000;
+    }
+    .col-notes {
+      color: #555;
+    }
+    .col-num {
+      color: #000;
+    }
+  }
+</style>
+
+<div class="proteus-theme">
+  <div class="proteus-header">
+    <div class="proteus-brand">Seaside Modular</div>
+    <h1 class="proteus-title">PROTEUS</h1>
+  </div>
+
+  <div class="proteus-content">
+    <div class="page-section">
+      <div class="page-title">PAGE 1</div>
+      <div class="scale-row">
+        <div class="col-num">1.</div>
+        <div class="col-name">Major</div>
+        <div class="col-notes">(C D E F G A B)</div>
+      </div>
+      <div class="scale-row">
+        <div class="col-num">2.</div>
+        <div class="col-name">Natural Minor</div>
+        <div class="col-notes">(C D Eb F G Ab Bb)</div>
+      </div>
+      <div class="scale-row">
+        <div class="col-num">3.</div>
+        <div class="col-name">Harmonic Minor</div>
+        <div class="col-notes">(C D Eb F G Ab B)</div>
+      </div>
+      <div class="scale-row">
+        <div class="col-num">4.</div>
+        <div class="col-name">Major Pentatonic</div>
+        <div class="col-notes">(C D E G A)</div>
+      </div>
+      <div class="scale-row">
+        <div class="col-num">5.</div>
+        <div class="col-name">Minor Pentatonic</div>
+        <div class="col-notes">(C Eb F G Bb)</div>
+      </div>
+      <div class="scale-row">
+        <div class="col-num">6.</div>
+        <div class="col-name">Dorian</div>
+        <div class="col-notes">(C D Eb F G A Bb)</div>
+      </div>
+      <div class="scale-row">
+        <div class="col-num">7.</div>
+        <div class="col-name">Mixolydian</div>
+        <div class="col-notes">(C D E F G A Bb)</div>
+      </div>
+      <div class="scale-row">
+        <div class="col-num">8.</div>
+        <div class="col-name">Bhairavi</div>
+        <div class="col-notes">(C Db Eb F G Ab Bb)</div>
+      </div>
+    </div>
+
+    <div class="page-section">
+      <div class="page-title">PAGE 2</div>
+      <div class="scale-row">
+        <div class="col-num">C1-C6</div>
+        <div class="col-name">Custom Scales</div>
+        <div class="col-notes">See manual</div>
+      </div>
+      <div class="scale-row">
+        <div class="col-num">7.</div>
+        <div class="col-name">Chromatic</div>
+        <div class="col-notes">(C C# D Eb E F F# G G# A Bb B)</div>
+      </div>
+      <div class="scale-row">
+        <div class="col-num">8.</div>
+        <div class="col-name">Tuning</div>
+        <div class="col-notes">Only outputs C to help you tune</div>
+      </div>
+      <div class="scale-row" style="border: none; visibility: hidden"></div>
+      <div class="scale-row" style="border: none; visibility: hidden"></div>
+      <div class="scale-row" style="border: none; visibility: hidden"></div>
+      <div class="scale-row" style="border: none; visibility: hidden"></div>
+      <div class="scale-row" style="border: none; visibility: hidden"></div>
+    </div>
+  </div>
+</div>

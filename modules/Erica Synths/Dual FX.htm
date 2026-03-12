@@ -1,0 +1,295 @@
+<style>
+  @import url("https://fonts.googleapis.com/css2?family=Jura:wght@500;700&family=Oswald:wght@400&display=swap");
+
+  .dual-fx-theme {
+    font-family: "Oswald", sans-serif;
+    background-color: #313338;
+    padding: 2vh 2vw;
+    border-radius: 8px;
+    color: #b0b1b3;
+    box-sizing: border-box;
+
+    /* Der Trick für Fullscreen: Modul auf volle Höhe zwingen */
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 90px); /* Bildschirmhöhe minus Navigation/Padding */
+    min-height: 400px; /* Fallback, damit es auf winzigen Screens nicht kaputt geht */
+  }
+
+  .dual-fx-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5vh;
+    border-bottom: 2px solid #5a5c60;
+    padding-bottom: 1vh;
+    flex-shrink: 0; /* Header darf nicht mitschrumpfen */
+  }
+
+  .dual-fx-title {
+    color: #ffffff;
+    font-family: "Jura", sans-serif;
+    /* Schrift wächst mit der Fenstergröße mit! */
+    font-size: clamp(24px, 4vh + 2vw, 70px);
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin: 0;
+  }
+
+  .dual-fx-logo {
+    width: clamp(30px, 5vh + 2vw, 80px);
+    height: auto;
+  }
+
+  /* Flexbox anstelle von Table für die vertikale Dehnung */
+  .fx-list {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1; /* Nimmt den gesamten restlichen Platz ein */
+    width: 100%;
+  }
+
+  .fx-row {
+    display: flex;
+    align-items: center;
+    flex-grow: 1; /* Jede Zeile dehnt sich gleichmäßig in die Höhe! */
+    border-bottom: 1px solid #444649;
+    /* Dynamische Schriftgröße für die Tabellen-Inhalte */
+    font-size: clamp(10px, 2vh + 0.5vw, 40px);
+    text-transform: uppercase;
+    line-height: 1.1;
+  }
+
+  .fx-row:last-child {
+    border-bottom: none;
+  }
+
+  .fx-row.header {
+    flex-grow: 0; /* Tabellenkopf bleibt schmal */
+    padding-bottom: 1vh;
+    border-bottom: 2px solid #ffffff;
+    font-family: "Jura", sans-serif;
+    font-weight: 700;
+    font-size: clamp(10px, 1.5vh + 0.5vw, 30px);
+    color: #ffffff;
+  }
+
+  /* Spaltenbreiten */
+  .col-led {
+    width: 15%;
+    min-width: 40px;
+    display: flex;
+    align-items: center;
+    gap: clamp(2px, 0.5vw, 10px);
+  }
+  .col-fx {
+    width: 30%;
+    color: #e0e0e0;
+    font-weight: bold;
+  }
+  .col-mix {
+    width: 15%;
+  }
+  .col-p1 {
+    width: 20%;
+  }
+  .col-p2 {
+    width: 20%;
+  }
+
+  /* Mitwachsende LEDs */
+  .led {
+    width: clamp(8px, 1.5vh + 0.2vw, 30px);
+    height: clamp(8px, 1.5vh + 0.2vw, 30px);
+    border-radius: 50%;
+    box-shadow:
+      0 1px 2px rgba(0, 0, 0, 0.4),
+      inset 0 -1px 2px rgba(0, 0, 0, 0.4);
+  }
+
+  .led.grey {
+    background: radial-gradient(circle at 35% 35%, #8e9092, #47494c, #1f2022);
+  }
+
+  .led.red {
+    background: radial-gradient(circle at 35% 35%, #ff5e5e, #e60000, #660000);
+    box-shadow:
+      0 0 6px rgba(255, 0, 0, 0.5),
+      inset 0 -1px 2px rgba(0, 0, 0, 0.4);
+  }
+
+  /* Print-Optimierung */
+  @media print {
+    .dual-fx-theme {
+      background-color: #fff;
+      padding: 0;
+      color: #000;
+      height: 100vh;
+      border: none;
+    }
+    .dual-fx-title,
+    .fx-row.header {
+      color: #000;
+      border-bottom-color: #000;
+    }
+    .fx-row {
+      color: #222;
+      border-bottom-color: #ccc;
+    }
+    .col-fx {
+      color: #000;
+    }
+    .led.grey {
+      background: #ccc;
+      box-shadow: none;
+      border: 1px solid #999;
+    }
+    .led.red {
+      background: #e60000;
+      box-shadow: none;
+      border: 1px solid #900;
+    }
+    .dual-fx-logo path,
+    .dual-fx-logo circle {
+      stroke: #000 !important;
+    }
+    .dual-fx-logo path[fill="#313338"] {
+      fill: #fff !important;
+    }
+  }
+</style>
+
+<div class="dual-fx-theme">
+  <div class="dual-fx-header">
+    <h1 class="dual-fx-title">DUAL FX</h1>
+    <svg
+      class="dual-fx-logo"
+      viewBox="0 0 100 100"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M50 85 C30 85, 20 70, 20 50 C20 30, 30 15, 50 15 C70 15, 80 30, 80 50 C80 70, 70 85, 50 85 Z"
+        stroke="white"
+        stroke-width="6"
+        fill="#313338"
+      />
+      <circle cx="35" cy="45" r="5" fill="white" />
+      <circle cx="65" cy="45" r="5" fill="white" />
+      <path
+        d="M45 65 L55 65"
+        stroke="white"
+        stroke-width="4"
+        stroke-linecap="round"
+      />
+      <path d="M50 85 L50 95" stroke="white" stroke-width="6" />
+      <path
+        d="M40 95 L60 95"
+        stroke="white"
+        stroke-width="6"
+        stroke-linecap="round"
+      />
+      <circle cx="20" cy="50" r="4" fill="white" />
+      <circle cx="80" cy="50" r="4" fill="white" />
+    </svg>
+  </div>
+
+  <div class="fx-list">
+    <div class="fx-row header">
+      <div class="col-led"></div>
+      <div class="col-fx">FX</div>
+      <div class="col-mix">D/W</div>
+      <div class="col-p1">PRM 1</div>
+      <div class="col-p2">PRM 2</div>
+    </div>
+
+    <div class="fx-row">
+      <div class="col-led">
+        <div class="led grey"></div>
+        <div class="led grey"></div>
+        <div class="led grey"></div>
+      </div>
+      <div class="col-fx">MONO DELAY</div>
+      <div class="col-mix">DRY/WET</div>
+      <div class="col-p1">TIME</div>
+      <div class="col-p2">FEEDBK</div>
+    </div>
+    <div class="fx-row">
+      <div class="col-led">
+        <div class="led red"></div>
+        <div class="led grey"></div>
+        <div class="led grey"></div>
+      </div>
+      <div class="col-fx">STEREO DELAY</div>
+      <div class="col-mix">DRY/WET</div>
+      <div class="col-p1">TIME</div>
+      <div class="col-p2">FEEDBK</div>
+    </div>
+    <div class="fx-row">
+      <div class="col-led">
+        <div class="led grey"></div>
+        <div class="led red"></div>
+        <div class="led grey"></div>
+      </div>
+      <div class="col-fx">HI PASS DELAY</div>
+      <div class="col-mix">DRY/WET</div>
+      <div class="col-p1">TIME</div>
+      <div class="col-p2">HP FILT</div>
+    </div>
+    <div class="fx-row">
+      <div class="col-led">
+        <div class="led red"></div>
+        <div class="led red"></div>
+        <div class="led grey"></div>
+      </div>
+      <div class="col-fx">BIG REVERB</div>
+      <div class="col-mix">DRY/WET</div>
+      <div class="col-p1">SIZE</div>
+      <div class="col-p2">TONE</div>
+    </div>
+    <div class="fx-row">
+      <div class="col-led">
+        <div class="led grey"></div>
+        <div class="led grey"></div>
+        <div class="led red"></div>
+      </div>
+      <div class="col-fx">SAT REVERB</div>
+      <div class="col-mix">DRY/WET</div>
+      <div class="col-p1">SIZE</div>
+      <div class="col-p2">TONE</div>
+    </div>
+    <div class="fx-row">
+      <div class="col-led">
+        <div class="led red"></div>
+        <div class="led grey"></div>
+        <div class="led red"></div>
+      </div>
+      <div class="col-fx">STALK REVERB</div>
+      <div class="col-mix">DRY/WET</div>
+      <div class="col-p1">TONE</div>
+      <div class="col-p2">FEEDBK</div>
+    </div>
+    <div class="fx-row">
+      <div class="col-led">
+        <div class="led grey"></div>
+        <div class="led red"></div>
+        <div class="led red"></div>
+      </div>
+      <div class="col-fx">RIPPER</div>
+      <div class="col-mix">DRIVE</div>
+      <div class="col-p1">CRUSH</div>
+      <div class="col-p2">D. TIME</div>
+    </div>
+    <div class="fx-row">
+      <div class="col-led">
+        <div class="led red"></div>
+        <div class="led red"></div>
+        <div class="led red"></div>
+      </div>
+      <div class="col-fx">DUAL PITCH</div>
+      <div class="col-mix">DRY/WET</div>
+      <div class="col-p1">SHIFT 1</div>
+      <div class="col-p2">SHIFT 2</div>
+    </div>
+  </div>
+</div>

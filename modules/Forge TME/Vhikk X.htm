@@ -1,0 +1,639 @@
+<style>
+  @import url("https://fonts.googleapis.com/css2?family=Jura:wght@500;700&family=Oswald:wght@400&family=Inter:wght@400;700&family=Roboto+Mono:wght@400;700&display=swap");
+
+  .vhikk-theme {
+    font-family: "Inter", sans-serif;
+    background-color: #111213;
+    padding: 2vh 2vw;
+    border-radius: 8px;
+    color: #d1d5db;
+    box-sizing: border-box;
+
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 90px);
+    min-height: 400px;
+  }
+
+  #vhikk-toggle {
+    display: none;
+  }
+
+  .vhikk-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 1.5vh;
+    border-bottom: 2px solid #3f1d1d;
+    padding-bottom: 1vh;
+    flex-shrink: 0;
+  }
+
+  .vhikk-brand {
+    font-size: clamp(10px, 1vh + 0.5vw, 18px);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #888;
+    font-family: "Oswald", sans-serif;
+    margin-bottom: -5px;
+  }
+
+  .vhikk-title {
+    color: #ffffff;
+    font-family: "Jura", sans-serif;
+    font-size: clamp(24px, 4vh + 2vw, 70px);
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin: 0;
+    line-height: 1;
+  }
+
+  .toggle-btn {
+    background: #222;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: "Jura", sans-serif;
+    font-size: clamp(10px, 1.5vh, 16px);
+    font-weight: 700;
+    color: #4fd1c5;
+    border: 1px solid #4fd1c5;
+    user-select: none;
+    transition: all 0.2s;
+  }
+
+  .toggle-btn:hover {
+    background: #4fd1c5;
+    color: #000;
+  }
+
+  #vhikk-toggle:checked ~ .vhikk-header .toggle-btn {
+    background: #4fd1c5;
+    color: #000;
+  }
+  #vhikk-toggle:checked ~ .vhikk-header .toggle-btn::after {
+    content: " (ON)";
+  }
+
+  .vhikk-content {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.5vh 2vw;
+    flex: 1;
+    min-height: 0;
+    overflow-y: hidden;
+  }
+
+  @media (min-width: 768px), (orientation: landscape) {
+    .vhikk-content {
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: repeat(5, 1fr);
+      grid-auto-flow: column;
+    }
+    .vhikk-row:nth-child(5),
+    .vhikk-row:nth-child(9) {
+      border-bottom: none;
+    }
+  }
+
+  .vhikk-row {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #2a1515;
+    flex-grow: 1;
+  }
+
+  .vhikk-main-line {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: 15px;
+  }
+
+  #vhikk-toggle:checked ~ .vhikk-content {
+    overflow-y: auto;
+    padding-right: 5px;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    grid-auto-flow: row;
+  }
+  #vhikk-toggle:checked ~ .vhikk-content .vhikk-row {
+    flex-direction: column;
+    align-items: flex-start;
+    flex-grow: 0;
+    padding: 2vh 0;
+    border-bottom: 1px solid #3f1d1d;
+  }
+  #vhikk-toggle:checked ~ .vhikk-content .vhikk-desc {
+    display: grid;
+  }
+
+  .led-matrix {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: clamp(1px, 0.2vw, 3px);
+    width: clamp(14px, 2vh + 0.5vw, 24px);
+    height: clamp(20px, 3vh + 1vw, 36px);
+    flex-shrink: 0;
+  }
+
+  .led-cell {
+    background-color: #1a1c1d;
+    border: 1px solid #4fd1c5;
+    border-radius: 1px;
+  }
+
+  .led-cell.on {
+    background-color: #4fd1c5;
+    box-shadow: 0 0 6px rgba(79, 209, 197, 0.6);
+    border-color: #81e6d9;
+  }
+
+  .algo-name {
+    font-size: clamp(10px, 1.6vh + 0.3vw, 24px);
+    font-weight: 700;
+    color: #e2e8f0;
+    line-height: 1.2;
+  }
+
+  .algo-effect {
+    color: #5e646a;
+  }
+
+  .vhikk-desc {
+    display: none;
+    grid-template-columns: auto 1fr;
+    column-gap: 10px;
+    row-gap: 4px;
+    width: 100%;
+    margin-top: 12px;
+    padding-left: clamp(25px, 4vh + 1vw, 55px);
+    font-family: "Roboto Mono", monospace;
+    font-size: clamp(9px, 1.2vh + 0.2vw, 16px);
+    color: #9ca3af;
+  }
+
+  .param-label {
+    color: #4fd1c5;
+    font-weight: 700;
+  }
+  .param-val {
+    color: #d1d5db;
+  }
+  .param-val span {
+    color: #9ca3af;
+  }
+
+  @media print {
+    .vhikk-theme {
+      background-color: #fff;
+      padding: 0;
+      color: #000;
+      height: auto !important;
+      border: none;
+    }
+    .vhikk-content {
+      overflow: visible !important;
+      height: auto !important;
+      grid-template-columns: 1fr !important;
+    }
+    .toggle-btn {
+      display: none !important;
+    }
+    .vhikk-row {
+      flex-direction: column !important;
+      align-items: flex-start !important;
+      flex-grow: 0 !important;
+      page-break-inside: avoid;
+      border-bottom: 1px solid #ccc !important;
+      padding: 10px 0 !important;
+    }
+    .vhikk-desc {
+      display: grid !important;
+      padding-left: 30px;
+    }
+    .algo-name {
+      color: #000;
+    }
+    .param-label {
+      color: #555;
+    }
+    .param-val {
+      color: #222;
+    }
+    .led-cell {
+      background-color: #eee;
+      border-color: #ccc;
+    }
+    .led-cell.on {
+      background-color: #000;
+      box-shadow: none;
+      border-color: #000;
+    }
+  }
+</style>
+
+<div class="vhikk-theme">
+  <input type="checkbox" id="vhikk-toggle" />
+
+  <div class="vhikk-header">
+    <div>
+      <div class="vhikk-brand">Forge TME</div>
+      <h1 class="vhikk-title">VHIKK X</h1>
+    </div>
+    <label for="vhikk-toggle" class="toggle-btn">SHOW DETAILS</label>
+  </div>
+
+  <div class="vhikk-content">
+    <div class="vhikk-row">
+      <div class="vhikk-main-line">
+        <div class="led-matrix">
+          <div class="led-cell on"></div>
+          <div class="led-cell on"></div>
+          <div class="led-cell"></div>
+          <div class="led-cell"></div>
+          <div class="led-cell"></div>
+          <div class="led-cell"></div>
+        </div>
+        <div class="algo-name">
+          2 oscillator "analogue-style"
+          <br /><span class="algo-effect"
+            >with dungeon metallic delay/reverb</span
+          >
+        </div>
+      </div>
+      <div class="vhikk-desc">
+        <div class="param-label">WARP</div>
+        <div class="param-val">
+          <span>CCW:</span> exponential cross-mod | <span>CW:</span> ring-mod
+          level
+        </div>
+        <div class="param-label">SPAN</div>
+        <div class="param-val">modulator relative tuning offset</div>
+        <div class="param-label">MORPH</div>
+        <div class="param-val">carrier waveform scan (pulse/saw/sine)</div>
+        <div class="param-label">FUSE</div>
+        <div class="param-val">
+          <span>CCW:</span> chorus mix | <span>CW:</span> filter resonance and
+          shape
+        </div>
+        <div class="param-label">SEED</div>
+        <div class="param-val">
+          multi-mode filter freq randomisation + delay tap spacing
+        </div>
+        <div class="param-label">SCAN</div>
+        <div class="param-val">modulator waveform scan (pulse/saw/sine)</div>
+      </div>
+    </div>
+
+    <div class="vhikk-row">
+      <div class="vhikk-main-line">
+        <div class="led-matrix">
+          <div class="led-cell on"></div>
+          <div class="led-cell"></div>
+          <div class="led-cell"></div>
+          <div class="led-cell on"></div>
+          <div class="led-cell"></div>
+          <div class="led-cell"></div>
+        </div>
+        <div class="algo-name">
+          Dynamic waveshaping oscillator pair
+          <br /><span class="algo-effect"
+            >with reflekta, diffuse delay structure</span
+          >
+        </div>
+      </div>
+      <div class="vhikk-desc">
+        <div class="param-label">WARP</div>
+        <div class="param-val">
+          <span>CCW:</span> modulation index - modulator feedback |
+          <span>CW:</span> modulation index - carrier feedback
+        </div>
+        <div class="param-label">SPAN</div>
+        <div class="param-val">
+          <span>CCW:</span> carrier frequency | <span>CW:</span> carrier
+          frequency + stereo spread
+        </div>
+        <div class="param-label">MORPH</div>
+        <div class="param-val">carrier waveform scan</div>
+        <div class="param-label">FUSE</div>
+        <div class="param-val">
+          <span>CCW:</span> delay line audio rate modulation |
+          <span>CW:</span> saturation gain
+        </div>
+        <div class="param-label">SEED</div>
+        <div class="param-val">
+          multi-notch filter freq randomisation + delay tap spacing
+        </div>
+        <div class="param-label">SCAN</div>
+        <div class="param-val">base waveshape set randomization</div>
+      </div>
+    </div>
+
+    <div class="vhikk-row">
+      <div class="vhikk-main-line">
+        <div class="led-matrix">
+          <div class="led-cell on"></div>
+          <div class="led-cell"></div>
+          <div class="led-cell"></div>
+          <div class="led-cell"></div>
+          <div class="led-cell"></div>
+          <div class="led-cell on"></div>
+        </div>
+        <div class="algo-name">
+          Multi-sine cluster oscillator bank
+          <br /><span class="algo-effect">dungeon metallic delay/reverb</span>
+        </div>
+      </div>
+      <div class="vhikk-desc">
+        <div class="param-label">WARP</div>
+        <div class="param-val">
+          <span>CCW:</span> oscillator phase feedback |
+          <span>CW:</span> inter-oscillator exponential frequency cross-mod
+        </div>
+        <div class="param-label">SPAN</div>
+        <div class="param-val">
+          <span>CCW:</span> frequency spread | <span>CW:</span> frequency +
+          stereo spread
+        </div>
+        <div class="param-label">MORPH</div>
+        <div class="param-val">cluster scan</div>
+        <div class="param-label">FUSE</div>
+        <div class="param-val">
+          <span>CCW:</span> chorus mix | <span>CW:</span> oscillator noise
+          modulation
+        </div>
+        <div class="param-label">SEED</div>
+        <div class="param-val">
+          cluster pitch offset randomization + delay tap spacing
+        </div>
+        <div class="param-label">SCAN</div>
+        <div class="param-val">inter-oscillator ring-mod mix</div>
+      </div>
+    </div>
+
+    <div class="vhikk-row">
+      <div class="vhikk-main-line">
+        <div class="led-matrix">
+          <div class="led-cell"></div>
+          <div class="led-cell on"></div>
+          <div class="led-cell on"></div>
+          <div class="led-cell"></div>
+          <div class="led-cell"></div>
+          <div class="led-cell"></div>
+        </div>
+        <div class="algo-name">
+          4 oscillator wavetable scanning
+          <br /><span class="algo-effect"
+            >with dungeon metallic delay/reverb</span
+          >
+        </div>
+      </div>
+      <div class="vhikk-desc">
+        <div class="param-label">WARP</div>
+        <div class="param-val">
+          <span>CCW:</span> continuous oscillator bit depth reduction |
+          <span>CW:</span> inter-oscillator exponential frequency cross-mod
+        </div>
+        <div class="param-label">SPAN</div>
+        <div class="param-val">
+          <span>CCW:</span> frequency + waveform spread |
+          <span>CW:</span> frequency + stereo spread
+        </div>
+        <div class="param-label">MORPH</div>
+        <div class="param-val">wavetable scan</div>
+        <div class="param-label">FUSE</div>
+        <div class="param-val">
+          <span>CCW:</span> filter bandpass morph with parallel sine oscillator
+          | <span>CW:</span> chorus mix and filter resonance + shape
+        </div>
+        <div class="param-label">SEED</div>
+        <div class="param-val">
+          pitch and wave offset randomization + delay tap spacing
+        </div>
+        <div class="param-label">SCAN</div>
+        <div class="param-val">base wavetable set randomization</div>
+      </div>
+    </div>
+
+    <div class="vhikk-row">
+      <div class="vhikk-main-line">
+        <div class="led-matrix">
+          <div class="led-cell"></div>
+          <div class="led-cell"></div>
+          <div class="led-cell on"></div>
+          <div class="led-cell on"></div>
+          <div class="led-cell"></div>
+          <div class="led-cell"></div>
+        </div>
+        <div class="algo-name">
+          4 oscillator wavetable scanning
+          <br /><span class="algo-effect"
+            >with dungeon metallic delay/reverb</span
+          >
+        </div>
+      </div>
+      <div class="vhikk-desc">
+        <div class="param-label">WARP</div>
+        <div class="param-val">
+          <span>CCW:</span> direct-oscillator phase modulation |
+          <span>CW:</span> inter-oscillator exponential frequency cross-mod
+        </div>
+        <div class="param-label">SPAN</div>
+        <div class="param-val">
+          <span>CCW:</span> frequency + waveform spread |
+          <span>CW:</span> frequency + stereo spread
+        </div>
+        <div class="param-label">MORPH</div>
+        <div class="param-val">wavetable scan</div>
+        <div class="param-label">FUSE</div>
+        <div class="param-val">
+          <span>CCW:</span> chorus mix | <span>CW:</span> chorus mix and filter
+          resonance
+        </div>
+        <div class="param-label">SEED</div>
+        <div class="param-val">
+          pitch and wave offset randomization + delay tap spacing
+        </div>
+        <div class="param-label">SCAN</div>
+        <div class="param-val">base wavetable set randomization</div>
+      </div>
+    </div>
+
+    <div class="vhikk-row">
+      <div class="vhikk-main-line">
+        <div class="led-matrix">
+          <div class="led-cell"></div>
+          <div class="led-cell"></div>
+          <div class="led-cell on"></div>
+          <div class="led-cell"></div>
+          <div class="led-cell"></div>
+          <div class="led-cell on"></div>
+        </div>
+        <div class="algo-name">
+          4 oscillator wavetable scanning
+          <br /><span class="algo-effect"
+            >with reflekta diffuse delay structure</span
+          >
+        </div>
+      </div>
+      <div class="vhikk-desc">
+        <div class="param-label">WARP</div>
+        <div class="param-val">
+          <span>CCW:</span> inter-oscillator phase modulation |
+          <span>CW:</span> inter-oscillator exponential frequency cross-mod
+        </div>
+        <div class="param-label">SPAN</div>
+        <div class="param-val">
+          <span>CCW:</span> frequency + waveform spread |
+          <span>CW:</span> frequency + stereo spread
+        </div>
+        <div class="param-label">MORPH</div>
+        <div class="param-val">wavetable scan</div>
+        <div class="param-label">FUSE</div>
+        <div class="param-val">
+          <span>CCW:</span> oscillator -&gt; allpass+delay line audio rate
+          modulation| <span>CW:</span> individual oscillator wavefold amount
+        </div>
+        <div class="param-label">SEED</div>
+        <div class="param-val">
+          pitch and wave offset randomization + delay tap spacing
+        </div>
+        <div class="param-label">SCAN</div>
+        <div class="param-val">base wavetable set randomization</div>
+      </div>
+    </div>
+
+    <div class="vhikk-row">
+      <div class="vhikk-main-line">
+        <div class="led-matrix">
+          <div class="led-cell"></div>
+          <div class="led-cell on"></div>
+          <div class="led-cell"></div>
+          <div class="led-cell"></div>
+          <div class="led-cell on"></div>
+          <div class="led-cell"></div>
+        </div>
+        <div class="algo-name">
+          4 oscillator diatonic-quantised cluster scanning
+          <br /><span class="algo-effect"
+            >with reflekta diffuse delay structure</span
+          >
+        </div>
+      </div>
+      <div class="vhikk-desc">
+        <div class="param-label">WARP</div>
+        <div class="param-val">
+          <span>CCW:</span> inter-oscillator phase modulation |
+          <span>CW:</span> inter-oscillator exponential frequency cross-mod
+        </div>
+        <div class="param-label">SPAN</div>
+        <div class="param-val">
+          bipolar quantised cluster-frequency spread |
+          <span>CW:</span> introduces stereo spread
+        </div>
+        <div class="param-label">MORPH</div>
+        <div class="param-val">cluster scan</div>
+        <div class="param-label">FUSE</div>
+        <div class="param-val">
+          <span>CCW:</span> stereo chorus mix | <span>CW:</span> saturation mix
+          and gain
+        </div>
+        <div class="param-label">SEED</div>
+        <div class="param-val">
+          cluster pitch and wave offset randomization + delay tap spacing
+        </div>
+        <div class="param-label">SCAN</div>
+        <div class="param-val">base wavetable set randomization</div>
+      </div>
+    </div>
+
+    <div class="vhikk-row">
+      <div class="vhikk-main-line">
+        <div class="led-matrix">
+          <div class="led-cell"></div>
+          <div class="led-cell"></div>
+          <div class="led-cell"></div>
+          <div class="led-cell on"></div>
+          <div class="led-cell on"></div>
+          <div class="led-cell"></div>
+        </div>
+        <div class="algo-name">
+          4 oscillator cluster scanning
+          <br /><span class="algo-effect"
+            >with dungeon metallic delay/reverb</span
+          >
+        </div>
+      </div>
+      <div class="vhikk-desc">
+        <div class="param-label">WARP</div>
+        <div class="param-val">
+          <span>CCW:</span> inter-oscillator phase modulation |
+          <span>CW:</span> inter-oscillator exponential frequency cross-mod
+        </div>
+        <div class="param-label">SPAN</div>
+        <div class="param-val">
+          bipolar cluster-frequency spread |
+          <span>CW:</span> introduces stereo spread
+        </div>
+        <div class="param-label">MORPH</div>
+        <div class="param-val">cluster scan</div>
+        <div class="param-label">FUSE</div>
+        <div class="param-val">
+          <span>CCW:</span> stereo chorus mix | <span>CW:</span> saturation mix
+          and gain
+        </div>
+        <div class="param-label">SEED</div>
+        <div class="param-val">
+          cluster pitch and wave offset randomization + delay tap spacing
+        </div>
+        <div class="param-label">SCAN</div>
+        <div class="param-val">base wavetable set randomization</div>
+      </div>
+    </div>
+
+    <div class="vhikk-row">
+      <div class="vhikk-main-line">
+        <div class="led-matrix">
+          <div class="led-cell"></div>
+          <div class="led-cell"></div>
+          <div class="led-cell"></div>
+          <div class="led-cell"></div>
+          <div class="led-cell on"></div>
+          <div class="led-cell on"></div>
+        </div>
+        <div class="algo-name">
+          4 oscillator cluster scanning
+          <br /><span class="algo-effect"
+            >with reflekta diffuse delay structure</span
+          >
+        </div>
+      </div>
+      <div class="vhikk-desc">
+        <div class="param-label">WARP</div>
+        <div class="param-val">
+          <span>CCW:</span> inter-oscillator phase modulation |
+          <span>CW:</span> inter-oscillator exponential frequency cross-mod
+        </div>
+        <div class="param-label">SPAN</div>
+        <div class="param-val">
+          bipolar cluster-frequency spread |
+          <span>CW:</span> introduces stereo spread
+        </div>
+        <div class="param-label">MORPH</div>
+        <div class="param-val">cluster scan</div>
+        <div class="param-label">FUSE</div>
+        <div class="param-val">
+          <span>CCW:</span> stereo chorus mix | <span>CW:</span> saturation mix
+          and gain
+        </div>
+        <div class="param-label">SEED</div>
+        <div class="param-val">
+          cluster pitch and wave offset randomization + delay tap spacing
+        </div>
+        <div class="param-label">SCAN</div>
+        <div class="param-val">base wavetable set randomization</div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,273 @@
+<style>
+  @import url("https://fonts.googleapis.com/css2?family=Jura:wght@500;700&family=Oswald:wght@400&family=Inter:wght@400;700&display=swap");
+
+  .plaits-theme {
+    font-family: "Inter", sans-serif;
+    background-color: #1a1c1e; /* Passend zum dunklen Setup */
+    padding: 2vh 2vw;
+    border-radius: 8px;
+    color: #e0e0e0;
+    box-sizing: border-box;
+
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 90px);
+    min-height: 400px;
+  }
+
+  .plaits-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 3vh;
+    border-bottom: 2px solid #e91e63; /* Mutable Pink */
+    padding-bottom: 1vh;
+    flex-shrink: 0;
+  }
+
+  .plaits-brand {
+    font-size: clamp(10px, 1vh + 0.5vw, 18px);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #e91e63;
+    font-family: "Oswald", sans-serif;
+    margin-bottom: -5px;
+  }
+
+  .plaits-title {
+    color: #ffffff;
+    font-family: "Jura", sans-serif;
+    font-size: clamp(24px, 4vh + 2vw, 70px);
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin: 0;
+    line-height: 1;
+  }
+
+  .plaits-content {
+    display: flex;
+    flex-direction: column;
+    gap: 3vh;
+    flex-grow: 1;
+    justify-content: center;
+  }
+
+  /* Container für ein einzelnes Setting */
+  .setting-block {
+    background: #222529;
+    border-left: 4px solid #e91e63;
+    padding: 2vh 3vw;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5vh;
+  }
+
+  /* Der visuelle Button-Indikator */
+  .action-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-family: "Jura", sans-serif;
+    font-size: clamp(16px, 2.5vh + 0.5vw, 32px);
+    font-weight: 700;
+    color: #fff;
+    border-bottom: 1px solid #333;
+    padding-bottom: 1vh;
+  }
+
+  .btn-group {
+    display: flex;
+    gap: 8px;
+  }
+
+  .mi-btn {
+    width: clamp(16px, 3vh, 30px);
+    height: clamp(16px, 3vh, 30px);
+    border-radius: 50%;
+    border: 2px solid #aaa;
+  }
+
+  .mi-btn.held {
+    background-color: #fff;
+    border-color: #fff;
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
+  }
+
+  /* Die Regler-Zuordnungen */
+  .param-row {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-size: clamp(14px, 2vh + 0.5vw, 28px);
+  }
+
+  /* Das neue Encoder-Icon */
+  .encoder-icon {
+    width: clamp(20px, 3vh, 40px);
+    height: clamp(20px, 3vh, 40px);
+    border-radius: 50%;
+    background: linear-gradient(145deg, #333, #111);
+    border: 2px solid #e91e63;
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  /* Der Indikator-Strich auf dem Encoder */
+  .encoder-icon::after {
+    content: "";
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 3px;
+    height: 40%;
+    background-color: #fff;
+    border-radius: 1px;
+  }
+
+  .knob-name {
+    font-family: "Oswald", sans-serif;
+    font-weight: bold;
+    color: #e91e63;
+    width: clamp(100px, 25vw, 200px);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .knob-val {
+    font-weight: 700;
+    color: #d1d5db;
+  }
+
+  .led-note {
+    font-size: clamp(11px, 1.5vh + 0.2vw, 20px);
+    color: #888;
+    font-family: "Roboto Mono", monospace;
+    margin-top: 0.5vh;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .led-yellow-alt {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #f1c40f;
+    box-shadow: 0 0 5px #f1c40f;
+  }
+
+  /* Print-Optimierung */
+  @media print {
+    .plaits-theme {
+      background-color: #fff;
+      padding: 0;
+      color: #000;
+      height: auto !important;
+      border: none;
+    }
+    .plaits-title,
+    .action-header {
+      color: #000;
+    }
+    .plaits-header {
+      border-bottom-color: #000;
+    }
+    .setting-block {
+      background: #f9f9f9;
+      border-left-color: #000;
+      page-break-inside: avoid;
+    }
+    .knob-name {
+      color: #555;
+    }
+    .knob-val {
+      color: #000;
+    }
+    .mi-btn.held {
+      background-color: #000;
+      border-color: #000;
+      box-shadow: none;
+    }
+    .mi-btn {
+      border-color: #666;
+    }
+    .encoder-icon {
+      background: #fff;
+      border-color: #000;
+    }
+    .encoder-icon::after {
+      background-color: #000;
+    }
+  }
+</style>
+
+<div class="plaits-theme">
+  <div class="plaits-header">
+    <div>
+      <div class="plaits-brand">Mutable Instruments</div>
+      <h1 class="plaits-title">PLAITS</h1>
+    </div>
+  </div>
+
+  <div class="plaits-content">
+    <div class="setting-block">
+      <div class="action-header">
+        <div class="btn-group">
+          <div class="mi-btn held"></div>
+          <div class="mi-btn"></div>
+        </div>
+        HOLD BTN 1 (LPG & ENV)
+      </div>
+
+      <div class="param-row">
+        <div class="encoder-icon"></div>
+        <div class="knob-name">TIMBRE</div>
+        <div class="knob-val">VCFA ↔ VCA</div>
+      </div>
+      <div class="param-row">
+        <div class="encoder-icon"></div>
+        <div class="knob-name">MORPH</div>
+        <div class="knob-val">Time / Decay</div>
+      </div>
+
+      <div class="led-note">
+        <div style="display: flex; gap: 4px">
+          <div class="led-yellow-alt"></div>
+          <div class="led-yellow-alt"></div>
+          <div class="led-yellow-alt"></div>
+          <div class="led-yellow-alt"></div>
+        </div>
+        Value = 4 Yellow LEDs
+      </div>
+    </div>
+
+    <div class="setting-block">
+      <div class="action-header">
+        <div class="btn-group">
+          <div class="mi-btn"></div>
+          <div class="mi-btn held"></div>
+        </div>
+        HOLD BTN 2 (FREQ RANGE)
+      </div>
+
+      <div class="param-row">
+        <div class="encoder-icon"></div>
+        <div class="knob-name">HARMONICS</div>
+        <div class="knob-val">C0 ↔ C7 ↔ 8 Oct</div>
+      </div>
+
+      <div class="led-note">
+        <div style="display: flex; gap: 4px">
+          <div class="led-yellow-alt"></div>
+          <div class="led-yellow-alt"></div>
+          <div class="led-yellow-alt"></div>
+          <div class="led-yellow-alt"></div>
+        </div>
+        Last setting = All LEDs lit (8-Octave Range)
+      </div>
+    </div>
+  </div>
+</div>

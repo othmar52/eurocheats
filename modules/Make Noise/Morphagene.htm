@@ -1,0 +1,510 @@
+<style>
+  @import url("https://fonts.googleapis.com/css2?family=Jura:wght@500;700&family=Oswald:wght@400&family=Inter:wght@400;700&display=swap");
+
+  .mg-theme {
+    /* CSS Variablen für die SVGs */
+    --svg-solid: #ffffff;
+    --svg-empty: #666666;
+    --svg-line: #ffffff;
+    --svg-bg: #111213; /* Hintergrundfarbe (auch für das 'H' genutzt) */
+
+    font-family: "Inter", sans-serif;
+    background-color: var(--svg-bg);
+    padding: 2vh 2vw;
+    border-radius: 8px;
+    color: #d1d5db;
+    box-sizing: border-box;
+
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 90px);
+    min-height: 400px;
+  }
+
+  .mg-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 2vh;
+    border-bottom: 2px solid #fff;
+    padding-bottom: 1vh;
+    flex-shrink: 0;
+  }
+
+  .mg-brand {
+    font-size: clamp(10px, 1vh + 0.5vw, 18px);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #888;
+    font-family: "Oswald", sans-serif;
+    margin-bottom: -5px;
+  }
+
+  .mg-title {
+    color: #ffffff;
+    font-family: "Jura", sans-serif;
+    font-size: clamp(24px, 4vh + 2vw, 60px);
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin: 0;
+    line-height: 1;
+  }
+
+  .mg-list {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    width: 100%;
+    overflow-y: auto;
+  }
+
+  .mg-row {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #2a2a2a;
+    padding: 1.5vh 0;
+  }
+
+  .mg-row:last-child {
+    border-bottom: none;
+  }
+
+  .mg-row.header {
+    padding-bottom: 0.5vh;
+    border-bottom: 1px solid #555;
+    flex-shrink: 0;
+    position: sticky;
+    top: 0;
+    background-color: var(--svg-bg);
+    z-index: 10;
+  }
+
+  .col-combo {
+    width: 40%;
+    min-width: 120px;
+    max-width: 200px;
+    flex-shrink: 0;
+    display: flex;
+    justify-content: center;
+  }
+
+  .col-action {
+    width: 60%;
+    font-size: clamp(11px, 1.8vh + 0.4vw, 24px);
+    font-weight: 500;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding-left: 3vw;
+  }
+
+  .combo-svg {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .badge {
+    background-color: #333;
+    color: #ddd;
+    font-size: 0.7em;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: "Roboto Mono", monospace;
+    white-space: nowrap;
+    border: 1px solid #555;
+  }
+
+  /* Smartphone Querformat & Desktop -> Spaltenweise Sortierung (1-6 links, 7-12 rechts) */
+  @media (min-width: 768px), (orientation: landscape) {
+    .mg-list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto repeat(6, 1fr);
+      grid-auto-flow: column;
+      column-gap: 4vw;
+      align-content: start;
+    }
+    .mg-row.header {
+      grid-column: 1 / -1;
+      grid-row: 1;
+    }
+    .mg-row {
+      padding: 1.2vh 0;
+    }
+    .mg-row:nth-child(7) {
+      border-bottom: none;
+    }
+    .mg-header {
+      margin-bottom: 1vh;
+    }
+  }
+
+  @media print {
+    .mg-theme {
+      background-color: #fff;
+      padding: 0;
+      color: #000;
+      height: auto;
+      border: none;
+      --svg-solid: #000000;
+      --svg-empty: #aaaaaa;
+      --svg-line: #000000;
+      --svg-bg: #ffffff;
+    }
+    .mg-title {
+      color: #000;
+      border-bottom-color: #000;
+    }
+    .mg-row {
+      border-bottom-color: #ccc;
+      page-break-inside: avoid;
+    }
+    .col-action {
+      color: #000;
+    }
+    .badge {
+      border-color: #999;
+      background: #eee;
+      color: #000;
+    }
+    .mg-row.header {
+      position: relative;
+      background: transparent;
+      border-bottom-color: #000;
+    }
+  }
+</style>
+
+<svg style="display: none">
+  <defs>
+    <circle
+      id="c-solid"
+      cx="0"
+      cy="0"
+      r="10"
+      fill="var(--svg-solid)"
+      stroke="var(--svg-solid)"
+      stroke-width="2"
+    />
+    <circle
+      id="c-empty"
+      cx="0"
+      cy="0"
+      r="10"
+      fill="var(--svg-bg)"
+      stroke="var(--svg-empty)"
+      stroke-width="2"
+    />
+    <g id="c-h">
+      <circle
+        cx="0"
+        cy="0"
+        r="10"
+        fill="var(--svg-solid)"
+        stroke="var(--svg-solid)"
+        stroke-width="2"
+      />
+      <text
+        x="0"
+        y="4"
+        font-family="sans-serif"
+        font-size="11"
+        font-weight="bold"
+        fill="var(--svg-bg)"
+        text-anchor="middle"
+      >
+        H
+      </text>
+    </g>
+
+    <g id="arr-r">
+      <polygon
+        points="-9,-4.5 0,0 -9,4.5"
+        fill="var(--svg-line)"
+        stroke="none"
+      />
+    </g>
+    <g id="arr-l">
+      <polygon points="9,-4.5 0,0 9,4.5" fill="var(--svg-line)" stroke="none" />
+    </g>
+  </defs>
+</svg>
+
+<div class="mg-theme">
+  <div class="mg-header">
+    <div>
+      <div class="mg-brand">Make Noise</div>
+      <h1 class="mg-title">MORPHAGENE</h1>
+    </div>
+  </div>
+
+  <div class="mg-list">
+    <div class="mg-row header">
+      <div class="col-combo">
+        <svg viewBox="0 0 120 15" class="combo-svg">
+          <text
+            x="15"
+            y="10"
+            font-size="9"
+            fill="var(--svg-empty)"
+            text-anchor="middle"
+            font-family="sans-serif"
+          >
+            REC
+          </text>
+          <text
+            x="60"
+            y="10"
+            font-size="9"
+            fill="var(--svg-empty)"
+            text-anchor="middle"
+            font-family="sans-serif"
+          >
+            SPLICE
+          </text>
+          <text
+            x="105"
+            y="10"
+            font-size="9"
+            fill="var(--svg-empty)"
+            text-anchor="middle"
+            font-family="sans-serif"
+          >
+            SHIFT
+          </text>
+        </svg>
+      </div>
+      <div
+        class="col-action"
+        style="
+          color: var(--svg-empty);
+          font-size: 0.6em;
+          text-transform: uppercase;
+        "
+      >
+        Action
+      </div>
+    </div>
+
+    <div class="mg-row">
+      <div class="col-combo">
+        <svg viewBox="0 0 120 30" class="combo-svg">
+          <use href="#c-solid" x="15" y="15" />
+          <use href="#c-empty" x="60" y="15" />
+          <use href="#c-solid" x="105" y="15" />
+          <line
+            x1="25"
+            y1="15"
+            x2="84"
+            y2="15"
+            stroke="var(--svg-line)"
+            stroke-width="2.5"
+          />
+          <use href="#arr-r" x="91" y="15" />
+        </svg>
+      </div>
+      <div class="col-action">
+        <span>Input gain selection</span> <span class="badge">MG203</span>
+      </div>
+    </div>
+
+    <div class="mg-row">
+      <div class="col-combo">
+        <svg viewBox="0 0 120 30" class="combo-svg">
+          <use href="#c-solid" x="15" y="15" />
+          <use href="#c-empty" x="60" y="15" />
+          <use href="#c-h" x="105" y="15" />
+          <line
+            x1="25"
+            y1="15"
+            x2="84"
+            y2="15"
+            stroke="var(--svg-line)"
+            stroke-width="2.5"
+          />
+          <use href="#arr-r" x="91" y="15" />
+        </svg>
+      </div>
+      <div class="col-action">
+        <span>Input gain auto-level</span> <span class="badge">Pre MG203</span>
+      </div>
+    </div>
+
+    <div class="mg-row">
+      <div class="col-combo">
+        <svg viewBox="0 0 120 30" class="combo-svg">
+          <use href="#c-solid" x="15" y="15" />
+          <use href="#c-empty" x="60" y="15" />
+          <use href="#c-empty" x="105" y="15" />
+        </svg>
+      </div>
+      <div class="col-action">Record</div>
+    </div>
+
+    <div class="mg-row">
+      <div class="col-combo">
+        <svg viewBox="0 0 120 30" class="combo-svg">
+          <use href="#c-solid" x="15" y="15" />
+          <use href="#c-solid" x="60" y="15" />
+          <use href="#c-empty" x="105" y="15" />
+          <line
+            x1="25"
+            y1="15"
+            x2="39"
+            y2="15"
+            stroke="var(--svg-line)"
+            stroke-width="2.5"
+          />
+          <use href="#arr-r" x="46" y="15" />
+        </svg>
+      </div>
+      <div class="col-action">Record into new splice</div>
+    </div>
+
+    <div class="mg-row">
+      <div class="col-combo">
+        <svg viewBox="0 0 120 30" class="combo-svg">
+          <use href="#c-empty" x="15" y="15" />
+          <use href="#c-solid" x="60" y="15" />
+          <use href="#c-empty" x="105" y="15" />
+        </svg>
+      </div>
+      <div class="col-action">Splice at position</div>
+    </div>
+
+    <div class="mg-row">
+      <div class="col-combo">
+        <svg viewBox="0 0 120 30" class="combo-svg">
+          <use href="#c-empty" x="15" y="15" />
+          <use href="#c-empty" x="60" y="15" />
+          <use href="#c-solid" x="105" y="15" />
+        </svg>
+      </div>
+      <div class="col-action">Next splice</div>
+    </div>
+
+    <div class="mg-row">
+      <div class="col-combo">
+        <svg viewBox="0 0 120 30" class="combo-svg">
+          <use href="#c-empty" x="15" y="15" />
+          <use href="#c-solid" x="60" y="15" />
+          <use href="#c-solid" x="105" y="15" />
+          <line
+            x1="95"
+            y1="15"
+            x2="81"
+            y2="15"
+            stroke="var(--svg-line)"
+            stroke-width="2.5"
+          />
+          <use href="#arr-l" x="74" y="15" />
+        </svg>
+      </div>
+      <div class="col-action">Delete splice marker</div>
+    </div>
+
+    <div class="mg-row">
+      <div class="col-combo">
+        <svg viewBox="0 0 120 30" class="combo-svg">
+          <use href="#c-empty" x="15" y="15" />
+          <use href="#c-h" x="60" y="15" />
+          <use href="#c-solid" x="105" y="15" />
+          <line
+            x1="95"
+            y1="15"
+            x2="81"
+            y2="15"
+            stroke="var(--svg-line)"
+            stroke-width="2.5"
+          />
+          <use href="#arr-l" x="74" y="15" />
+        </svg>
+      </div>
+      <div class="col-action">Delete all splice markers</div>
+    </div>
+
+    <div class="mg-row">
+      <div class="col-combo">
+        <svg viewBox="0 0 120 30" class="combo-svg">
+          <use href="#c-solid" x="15" y="15" />
+          <use href="#c-empty" x="60" y="15" />
+          <use href="#c-solid" x="105" y="15" />
+          <line
+            x1="95"
+            y1="15"
+            x2="36"
+            y2="15"
+            stroke="var(--svg-line)"
+            stroke-width="2.5"
+          />
+          <use href="#arr-l" x="29" y="15" />
+        </svg>
+      </div>
+      <div class="col-action">Delete splice</div>
+    </div>
+
+    <div class="mg-row">
+      <div class="col-combo">
+        <svg viewBox="0 0 120 30" class="combo-svg">
+          <use href="#c-h" x="15" y="15" />
+          <use href="#c-empty" x="60" y="15" />
+          <use href="#c-solid" x="105" y="15" />
+          <line
+            x1="95"
+            y1="15"
+            x2="36"
+            y2="15"
+            stroke="var(--svg-line)"
+            stroke-width="2.5"
+          />
+          <use href="#arr-l" x="29" y="15" />
+        </svg>
+      </div>
+      <div class="col-action">Delete all splices</div>
+    </div>
+
+    <div class="mg-row">
+      <div class="col-combo">
+        <svg viewBox="0 0 120 30" class="combo-svg">
+          <use href="#c-solid" x="15" y="15" />
+          <use href="#c-solid" x="60" y="15" />
+          <use href="#c-empty" x="105" y="15" />
+          <line
+            x1="50"
+            y1="15"
+            x2="36"
+            y2="15"
+            stroke="var(--svg-line)"
+            stroke-width="2.5"
+          />
+          <use href="#arr-l" x="29" y="15" />
+        </svg>
+      </div>
+      <div class="col-action">Reel mode: enter/exit</div>
+    </div>
+
+    <div class="mg-row">
+      <div class="col-combo">
+        <svg viewBox="0 0 120 30" class="combo-svg">
+          <use href="#c-solid" x="15" y="15" />
+          <use href="#c-empty" x="60" y="15" />
+          <use href="#c-solid" x="105" y="15" />
+          <line
+            x1="95"
+            y1="15"
+            x2="36"
+            y2="15"
+            stroke="var(--svg-line)"
+            stroke-width="2.5"
+          />
+          <use href="#arr-l" x="29" y="15" />
+        </svg>
+      </div>
+      <div class="col-action">Reel mode: delete reel</div>
+    </div>
+  </div>
+</div>

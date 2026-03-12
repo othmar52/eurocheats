@@ -1,0 +1,282 @@
+<style>
+  @import url("https://fonts.googleapis.com/css2?family=Jura:wght@500;700&family=Oswald:wght@400&family=Inter:wght@400;700&display=swap");
+
+  .nrings-theme {
+    font-family: "Inter", sans-serif;
+    background-color: #1a1c1e; /* Ein dunkles Anthrazit, passend zum Panel */
+    padding: 2vh 2vw;
+    border-radius: 8px;
+    color: #e0e0e0;
+    box-sizing: border-box;
+
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 90px);
+    min-height: 400px;
+  }
+
+  .nrings-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 3vh;
+    border-bottom: 2px solid #555;
+    padding-bottom: 1vh;
+    flex-shrink: 0;
+  }
+
+  .nrings-brand {
+    font-size: clamp(10px, 1vh + 0.5vw, 18px);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #888;
+    font-family: "Oswald", sans-serif;
+    margin-bottom: -5px;
+  }
+
+  .nrings-title {
+    color: #ffffff;
+    font-family: "Jura", sans-serif;
+    font-size: clamp(24px, 4vh + 2vw, 55px);
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin: 0;
+    line-height: 1;
+  }
+
+  .nrings-subtitle {
+    color: #f39c12; /* Easter Egg Akzentfarbe */
+    font-family: "Oswald", sans-serif;
+    font-size: clamp(12px, 1.5vh + 0.5vw, 20px);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .nrings-content {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 100%;
+  }
+
+  /* Die Regler-Zeilen */
+  .knob-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(15px, 4vw, 50px);
+    width: 100%;
+    padding: 1vh 0;
+    border-bottom: 1px solid #2a2c2e;
+  }
+
+  .knob-row:last-of-type {
+    border-bottom: none;
+  }
+
+  /* Beschriftung in der Mitte */
+  .knob-label {
+    font-family: "Oswald", sans-serif;
+    font-size: clamp(14px, 2.5vh + 1vw, 35px);
+    font-weight: 400;
+    letter-spacing: 1px;
+    color: #ccc;
+    width: clamp(60px, 15vw, 120px);
+    text-align: center;
+  }
+
+  /* Basis-Styling für die Potis */
+  .knob {
+    border-radius: 50%;
+    background: linear-gradient(145deg, #333, #111);
+    box-shadow:
+      0 4px 6px rgba(0, 0, 0, 0.6),
+      inset 0 1px 2px rgba(255, 255, 255, 0.1);
+    position: relative;
+    border: 1px solid #000;
+  }
+
+  .knob-sm {
+    width: clamp(25px, 5vh + 1vw, 50px);
+    height: clamp(25px, 5vh + 1vw, 50px);
+  }
+
+  .knob-lg {
+    width: clamp(40px, 8vh + 1.5vw, 80px);
+    height: clamp(40px, 8vh + 1.5vw, 80px);
+  }
+
+  /* Der weiße Indikator-Strich */
+  .knob-inner {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    border-radius: 50%;
+  }
+
+  .knob-inner::before {
+    content: "";
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: clamp(2px, 0.4vw, 4px);
+    height: 25%;
+    background-color: #fff;
+    border-radius: 2px;
+    box-shadow: 0 0 2px rgba(255, 255, 255, 0.5);
+  }
+
+  /* Die Rotationen */
+  .pos-cw .knob-inner {
+    transform: rotate(135deg);
+  }
+  .pos-ccw .knob-inner {
+    transform: rotate(-135deg);
+  }
+  .pos-mid .knob-inner {
+    transform: rotate(0deg);
+  }
+
+  /* Action Box unten */
+  .action-box {
+    margin-top: 2vh;
+    padding: 2vh 3vw;
+    background-color: #222428;
+    border: 2px dashed #444;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    width: 90%;
+    max-width: 500px;
+    justify-content: center;
+  }
+
+  .action-text {
+    font-family: "Inter", sans-serif;
+    font-size: clamp(11px, 1.8vh + 0.4vw, 20px);
+    color: #fff;
+    text-align: center;
+  }
+
+  .action-text strong {
+    color: #f39c12;
+  }
+
+  /* Blinkende LED für das Feedback */
+  .mode-led {
+    width: clamp(12px, 2vh, 20px);
+    height: clamp(12px, 2vh, 20px);
+    border-radius: 50%;
+    background-color: #ff3333;
+    box-shadow: 0 0 10px #ff3333;
+    animation: blink 0.8s infinite alternate;
+    border: 1px solid #222;
+    flex-shrink: 0;
+  }
+
+  @keyframes blink {
+    0% {
+      opacity: 0.2;
+      box-shadow: 0 0 2px #ff3333;
+    }
+    100% {
+      opacity: 1;
+      box-shadow: 0 0 15px #ff3333;
+    }
+  }
+
+  /* Print-Optimierung */
+  @media print {
+    .nrings-theme {
+      background-color: #fff;
+      padding: 0;
+      color: #000;
+      height: auto !important;
+      border: none;
+    }
+    .nrings-title,
+    .nrings-brand,
+    .knob-label,
+    .action-text {
+      color: #000;
+    }
+    .nrings-header {
+      border-bottom-color: #000;
+    }
+    .knob-row {
+      border-bottom-color: #ccc;
+    }
+    .knob {
+      background: #eee;
+      box-shadow: none;
+      border: 2px solid #333;
+    }
+    .knob-inner::before {
+      background-color: #000;
+      box-shadow: none;
+    }
+    .action-box {
+      background-color: #fff;
+      border-color: #000;
+    }
+    .mode-led {
+      animation: none;
+      background-color: #fff;
+      border: 2px solid #000;
+      box-shadow: none;
+    }
+  }
+</style>
+
+<div class="nrings-theme">
+  <div class="nrings-header">
+    <div>
+      <div class="nrings-brand">Nano Rings</div>
+      <h1 class="nrings-title">nRiNGS</h1>
+    </div>
+    <div class="nrings-subtitle">Easter Egg</div>
+  </div>
+
+  <div class="nrings-content">
+    <div class="knob-row">
+      <div class="knob knob-sm pos-cw"><div class="knob-inner"></div></div>
+      <div class="knob-label">FRQ</div>
+      <div class="knob knob-lg pos-ccw"><div class="knob-inner"></div></div>
+    </div>
+
+    <div class="knob-row">
+      <div class="knob knob-sm pos-cw"><div class="knob-inner"></div></div>
+      <div class="knob-label">SHP</div>
+      <div class="knob knob-lg pos-cw"><div class="knob-inner"></div></div>
+    </div>
+
+    <div class="knob-row">
+      <div class="knob knob-sm pos-ccw"><div class="knob-inner"></div></div>
+      <div class="knob-label">BRI</div>
+      <div class="knob knob-lg pos-ccw"><div class="knob-inner"></div></div>
+    </div>
+
+    <div class="knob-row">
+      <div class="knob knob-sm pos-ccw"><div class="knob-inner"></div></div>
+      <div class="knob-label">DAM</div>
+      <div class="knob knob-lg pos-mid"><div class="knob-inner"></div></div>
+    </div>
+
+    <div class="knob-row">
+      <div class="knob knob-sm pos-ccw"><div class="knob-inner"></div></div>
+      <div class="knob-label">POS</div>
+      <div class="knob knob-lg pos-cw"><div class="knob-inner"></div></div>
+    </div>
+
+    <div class="action-box">
+      <div class="action-text">
+        Hold down lower button <strong>(MODE)</strong> until flash
+      </div>
+      <div class="mode-led"></div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,572 @@
+<style>
+  @import url("https://fonts.googleapis.com/css2?family=Jura:wght@500;700&family=Oswald:wght@400&family=Inter:wght@400;700&display=swap");
+
+  .mw-theme {
+    font-family: "Inter", sans-serif;
+    background-color: #1a1b1e; /* Dunkles Endorphin.es Grau */
+    padding: 2vh 2vw;
+    border-radius: 8px;
+    color: #e0e0e0;
+    box-sizing: border-box;
+
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 90px);
+    min-height: 400px;
+  }
+
+  /* Der unsichtbare Toggle-Hack */
+  #mw-toggle {
+    display: none;
+  }
+
+  .mw-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 1.5vh;
+    border-bottom: 2px solid #5a5c60;
+    padding-bottom: 1vh;
+    flex-shrink: 0;
+  }
+
+  .mw-brand {
+    font-size: clamp(10px, 1vh + 0.5vw, 18px);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #f1c40f; /* Endorphin.es Gold */
+    font-family: "Oswald", sans-serif;
+    margin-bottom: -5px;
+  }
+
+  .mw-title {
+    color: #ffffff;
+    font-family: "Jura", sans-serif;
+    font-size: clamp(24px, 4vh + 2vw, 70px);
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin: 0;
+    line-height: 1;
+  }
+
+  /* Der Toggle-Button */
+  .toggle-btn {
+    background: #333;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: "Jura", sans-serif;
+    font-size: clamp(10px, 1.5vh, 16px);
+    font-weight: 700;
+    color: #aaa;
+    border: 1px solid #555;
+    user-select: none;
+    transition: all 0.2s;
+  }
+
+  .toggle-btn:hover {
+    background: #444;
+    color: #fff;
+  }
+
+  /* Wenn aktiviert: Button-Styling ändern */
+  #mw-toggle:checked ~ .mw-header .toggle-btn {
+    background: #f1c40f;
+    color: #000;
+    border-color: #f1c40f;
+  }
+  #mw-toggle:checked ~ .mw-header .toggle-btn::after {
+    content: " (ON)";
+  }
+
+  .mw-content {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1vh 3vw;
+    flex: 1;
+    min-height: 0; /* Wichtig für flexibles Scroll-Verhalten */
+    overflow-y: hidden; /* Standardmäßig kein Scrollen (Schmalspur) */
+  }
+
+  @media (min-width: 768px), (orientation: landscape) {
+    .mw-content {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .mw-bank {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .bank-title {
+    font-family: "Jura", sans-serif;
+    font-weight: 700;
+    font-size: clamp(14px, 2vh + 0.5vw, 24px);
+    color: #f1c40f;
+    margin-bottom: 1vh;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px dashed #444;
+    padding-bottom: 4px;
+  }
+
+  .mw-row {
+    display: flex;
+    align-items: center; /* Schmalspur: Alles in einer Zeile zentrieren */
+    border-bottom: 1px solid #333;
+    flex-grow: 1; /* Schmalspur: Zeilen dehnen sich in die Höhe */
+  }
+
+  .mw-main-line {
+    display: flex;
+    align-items: center;
+    width: 100%;
+  }
+
+  /* --- WENN DER DETAILS-BUTTON GEDRÜCKT WIRD --- */
+  #mw-toggle:checked ~ .mw-content {
+    overflow-y: auto; /* Scrollen erlauben */
+    padding-right: 5px;
+  }
+  #mw-toggle:checked ~ .mw-content .mw-row {
+    flex-direction: column;
+    align-items: flex-start;
+    flex-grow: 0; /* Zeilen dehnen sich nicht mehr */
+    padding: 1.5vh 0;
+  }
+  #mw-toggle:checked ~ .mw-content .mw-desc {
+    display: block; /* Beschreibungen einblenden */
+  }
+
+  /* LEDs */
+  .led-container {
+    display: flex;
+    gap: clamp(2px, 0.4vw, 5px);
+    margin-right: 1vw;
+  }
+
+  .led-circ {
+    width: clamp(8px, 1.2vh + 0.2vw, 20px);
+    height: clamp(8px, 1.2vh + 0.2vw, 20px);
+    border-radius: 50%;
+    border: 1px solid #111;
+  }
+
+  .led-full {
+    background: radial-gradient(circle at 35% 35%, #fffde6, #ffe066, #b39b30);
+    box-shadow:
+      0 0 8px rgba(255, 224, 102, 0.6),
+      inset 0 -1px 2px rgba(0, 0, 0, 0.4);
+    border-color: #99831a;
+  }
+
+  .led-dim {
+    background: radial-gradient(circle at 35% 35%, #aaa, #887755, #443b2a);
+    box-shadow: inset 0 -1px 2px rgba(0, 0, 0, 0.6);
+  }
+
+  .led-off {
+    background: radial-gradient(circle at 35% 35%, #555, #2a2a2a, #111);
+    box-shadow: inset 0 -1px 3px rgba(0, 0, 0, 0.8);
+  }
+
+  .algo-name {
+    font-size: clamp(11px, 1.8vh + 0.4vw, 28px);
+    font-weight: 700;
+    color: #ffffff;
+    text-transform: uppercase;
+    line-height: 1.1;
+  }
+
+  .mw-desc {
+    display: none; /* Standardmäßig versteckt */
+    font-size: clamp(10px, 1.4vh + 0.2vw, 18px);
+    color: #9a9c9e;
+    margin-top: 8px;
+    line-height: 1.4;
+    text-align: justify;
+  }
+
+  /* Print-Optimierung: Immer Vollversion drucken! */
+  @media print {
+    .mw-theme {
+      background-color: #fff;
+      padding: 0;
+      color: #000;
+      height: auto !important;
+      border: none;
+    }
+    .mw-content {
+      overflow: visible !important;
+      height: auto !important;
+    }
+    .toggle-btn {
+      display: none !important;
+    }
+    .mw-row {
+      flex-direction: column !important;
+      align-items: flex-start !important;
+      flex-grow: 0 !important;
+      page-break-inside: avoid;
+    }
+    .mw-desc {
+      display: block !important;
+      color: #333;
+    }
+    .algo-name {
+      color: #000;
+    }
+    .led-circ {
+      box-shadow: none !important;
+    }
+    .led-full {
+      background: #ffe066;
+      border-color: #000;
+    }
+    .led-off {
+      background: #eee;
+    }
+  }
+</style>
+
+<div class="mw-theme">
+  <input type="checkbox" id="mw-toggle" />
+
+  <div class="mw-header">
+    <div>
+      <div class="mw-brand">Endorphin.es</div>
+      <h1 class="mw-title">MILKY WAY</h1>
+    </div>
+    <label for="mw-toggle" class="toggle-btn">SHOW DETAILS</label>
+  </div>
+
+  <div class="mw-content">
+    <div class="mw-bank">
+      <div class="bank-title">
+        AIRWAYS BANK
+        <svg width="20" height="20" viewBox="0 0 100 100">
+          <polygon
+            points="50,5 95,95 5,95"
+            fill="#f1c40f"
+            stroke="#333"
+            stroke-width="5"
+          />
+          <circle
+            cx="50"
+            cy="65"
+            r="16"
+            fill="#4a90e2"
+            stroke="#4a90e2"
+            stroke-width="2"
+          />
+        </svg>
+      </div>
+
+      <div class="mw-row">
+        <div class="mw-main-line">
+          <div class="led-container">
+            <div class="led-circ led-full"></div>
+            <div class="led-circ led-off"></div>
+            <div class="led-circ led-off"></div>
+            <div class="led-circ led-off"></div>
+          </div>
+          <div class="algo-name">Hall Reverb</div>
+        </div>
+        <div class="mw-desc">
+          <strong>'Cabin fever'</strong> knob defines the decay of the reverb or
+          hall size. Holding 'tap' for longer than 1 second enables the
+          secondary function: fixed hi-pass filter to cut off low frequencies
+          and have more 'air' in the final output.
+        </div>
+      </div>
+
+      <div class="mw-row">
+        <div class="mw-main-line">
+          <div class="led-container">
+            <div class="led-circ led-off"></div>
+            <div class="led-circ led-full"></div>
+            <div class="led-circ led-off"></div>
+            <div class="led-circ led-off"></div>
+          </div>
+          <div class="algo-name">Shimmer Reverb</div>
+        </div>
+        <div class="mw-desc">
+          Variation of the hall reverb with a pitch shifter to create choir-like
+          spaces. Primary <strong>'cabin fever'</strong> defines decay,
+          secondary function defines the amount of pitch-shifter mixed into
+          original reverb.
+        </div>
+      </div>
+
+      <div class="mw-row">
+        <div class="mw-main-line">
+          <div class="led-container">
+            <div class="led-circ led-off"></div>
+            <div class="led-circ led-off"></div>
+            <div class="led-circ led-full"></div>
+            <div class="led-circ led-off"></div>
+          </div>
+          <div class="algo-name">Stereo Room Reverb</div>
+        </div>
+        <div class="mw-desc">
+          Recreates a sort of stereo room ambience. Primary
+          <strong>'cabin fever'</strong> defines room size and the secondary
+          defines the stereo spread of the reverb, from mono up to a huge stereo
+          spread.
+        </div>
+      </div>
+
+      <div class="mw-row">
+        <div class="mw-main-line">
+          <div class="led-container">
+            <div class="led-circ led-off"></div>
+            <div class="led-circ led-off"></div>
+            <div class="led-circ led-off"></div>
+            <div class="led-circ led-full"></div>
+          </div>
+          <div class="algo-name">Plate Reverb</div>
+        </div>
+        <div class="mw-desc">
+          Primary <strong>'cabin fever'</strong> defines the decay of the reverb
+          (distance from pickups to metal plate). Secondary parameter defines
+          the amount of pre-delay to distant sounds in ambience.
+        </div>
+      </div>
+
+      <div class="mw-row">
+        <div class="mw-main-line">
+          <div class="led-container">
+            <div class="led-circ led-dim"></div>
+            <div class="led-circ led-off"></div>
+            <div class="led-circ led-off"></div>
+            <div class="led-circ led-off"></div>
+          </div>
+          <div class="algo-name">Spring Reverb</div>
+        </div>
+        <div class="mw-desc">
+          Primary <strong>'cabin fever'</strong> defines decay. With 'tap'
+          button you can simulate plucking the real spring. Secondary function
+          is tied to 'pluck the spring' feature and defines how fast the spring
+          will calm down.
+        </div>
+      </div>
+
+      <div class="mw-row">
+        <div class="mw-main-line">
+          <div class="led-container">
+            <div class="led-circ led-off"></div>
+            <div class="led-circ led-dim"></div>
+            <div class="led-circ led-off"></div>
+            <div class="led-circ led-off"></div>
+          </div>
+          <div class="algo-name">Ping-Pong Delay</div>
+        </div>
+        <div class="mw-desc">
+          A stereo clocked delay. A 'tap' is 3+ short clicks. Primary
+          <strong>'cabin fever'</strong> defines feedback. Secondary defines
+          clock division of incoming tap/clock: 1, 3/4, 2/3, 1/2, 1/3, 1/4, 1/8.
+        </div>
+      </div>
+
+      <div class="mw-row">
+        <div class="mw-main-line">
+          <div class="led-container">
+            <div class="led-circ led-off"></div>
+            <div class="led-circ led-off"></div>
+            <div class="led-circ led-dim"></div>
+            <div class="led-circ led-off"></div>
+          </div>
+          <div class="algo-name">Tape Echo</div>
+        </div>
+        <div class="mw-desc">
+          Delay with 3 fixed playback heads. Primary
+          <strong>'cabin fever'</strong> defines repeat rate (speed of tape).
+          'Tap' defines feedback. Secondary works as a divider for the incoming
+          clock.
+        </div>
+      </div>
+
+      <div class="mw-row">
+        <div class="mw-main-line">
+          <div class="led-container">
+            <div class="led-circ led-off"></div>
+            <div class="led-circ led-off"></div>
+            <div class="led-circ led-off"></div>
+            <div class="led-circ led-dim"></div>
+          </div>
+          <div class="algo-name">Chorus</div>
+        </div>
+        <div class="mw-desc">
+          Primary <strong>'cabin fever'</strong> defines feedback amount (up to
+          infinite unrealistic ambient). Secondary parameter defines modulation
+          depth, which is 'full on' by default.
+        </div>
+      </div>
+    </div>
+
+    <div class="mw-bank">
+      <div class="bank-title">
+        DARKWAVES BANK
+        <svg width="20" height="20" viewBox="0 0 100 100">
+          <polygon
+            points="50,5 95,95 5,95"
+            fill="#f1c40f"
+            stroke="#333"
+            stroke-width="5"
+          />
+          <circle
+            cx="50"
+            cy="65"
+            r="16"
+            fill="#e74c3c"
+            stroke="#e74c3c"
+            stroke-width="2"
+          />
+        </svg>
+      </div>
+
+      <div class="mw-row">
+        <div class="mw-main-line">
+          <div class="led-container">
+            <div class="led-circ led-full"></div>
+            <div class="led-circ led-off"></div>
+            <div class="led-circ led-off"></div>
+            <div class="led-circ led-off"></div>
+          </div>
+          <div class="algo-name">Gated Reverb</div>
+        </div>
+        <div class="mw-desc">
+          Plate reverb with noise gate. Primary
+          <strong>'cabin fever'</strong> defines reverb decay, secondary defines
+          threshold of the noise gate. Attack and decay are fixed.
+        </div>
+      </div>
+
+      <div class="mw-row">
+        <div class="mw-main-line">
+          <div class="led-container">
+            <div class="led-circ led-off"></div>
+            <div class="led-circ led-full"></div>
+            <div class="led-circ led-off"></div>
+            <div class="led-circ led-off"></div>
+          </div>
+          <div class="algo-name">Spring Reverb</div>
+        </div>
+        <div class="mw-desc">
+          Primary <strong>'cabin fever'</strong> defines decay. With 'tap'
+          button you can simulate plucking the spring. Secondary function
+          defines DECAY of how fast the spring will calm down after manually
+          plucking.
+        </div>
+      </div>
+
+      <div class="mw-row">
+        <div class="mw-main-line">
+          <div class="led-container">
+            <div class="led-circ led-off"></div>
+            <div class="led-circ led-off"></div>
+            <div class="led-circ led-full"></div>
+            <div class="led-circ led-off"></div>
+          </div>
+          <div class="algo-name">Reversed Reverb</div>
+        </div>
+        <div class="mw-desc">
+          Takes reverb tail and reverses it (breathing effect).
+          <strong>'Cabin pressure'</strong> defines predelay (dry/wet).
+          <strong>'Cabin fever'</strong> sets decay. Secondary function: damping
+          (volume of the tail/head).
+        </div>
+      </div>
+
+      <div class="mw-row">
+        <div class="mw-main-line">
+          <div class="led-container">
+            <div class="led-circ led-off"></div>
+            <div class="led-circ led-off"></div>
+            <div class="led-circ led-off"></div>
+            <div class="led-circ led-full"></div>
+          </div>
+          <div class="algo-name">Flanger</div>
+        </div>
+        <div class="mw-desc">
+          <strong>'Cabin pressure'</strong> sets amount of delay. Primary
+          <strong>'cabin fever'</strong> sets LFO speed. Secondary defines
+          feedback for sweeping, airplane engine alike sounds.
+        </div>
+      </div>
+
+      <div class="mw-row">
+        <div class="mw-main-line">
+          <div class="led-container">
+            <div class="led-circ led-dim"></div>
+            <div class="led-circ led-off"></div>
+            <div class="led-circ led-off"></div>
+            <div class="led-circ led-off"></div>
+          </div>
+          <div class="algo-name">Ring Modulator</div>
+        </div>
+        <div class="mw-desc">
+          Multiplies signal with internal sine wave.
+          <strong>'Cabin pressure'</strong> defines modulation amount,
+          <strong>'cabin fever'</strong> defines speed. Secondary function
+          controls feedback for special dirtiness.
+        </div>
+      </div>
+
+      <div class="mw-row">
+        <div class="mw-main-line">
+          <div class="led-container">
+            <div class="led-circ led-off"></div>
+            <div class="led-circ led-dim"></div>
+            <div class="led-circ led-off"></div>
+            <div class="led-circ led-off"></div>
+          </div>
+          <div class="algo-name">Overdrive</div>
+        </div>
+        <div class="mw-desc">
+          <strong>'Cabin pressure'</strong> adjusts drive with volume
+          compensation, <strong>'cabin fever'</strong> defines tone control.
+          'Tap' button makes the effect active/bypassed (latching via trigger CV
+          input).
+        </div>
+      </div>
+
+      <div class="mw-row">
+        <div class="mw-main-line">
+          <div class="led-container">
+            <div class="led-circ led-off"></div>
+            <div class="led-circ led-off"></div>
+            <div class="led-circ led-dim"></div>
+            <div class="led-circ led-off"></div>
+          </div>
+          <div class="algo-name">Peak Compressor</div>
+        </div>
+        <div class="mw-desc">
+          <strong>'Cabin pressure'</strong> defines threshold (-90dB to 0dB).
+          Primary <strong>'cabin fever'</strong> sets gain reduction ratio.
+          Secondary defines attack (1-200ms). Release is 'auto'. CV input acts
+          as side-chain.
+        </div>
+      </div>
+
+      <div class="mw-row">
+        <div class="mw-main-line">
+          <div class="led-container">
+            <div class="led-circ led-off"></div>
+            <div class="led-circ led-off"></div>
+            <div class="led-circ led-off"></div>
+            <div class="led-circ led-dim"></div>
+          </div>
+          <div class="algo-name">Freezer / Looper</div>
+        </div>
+        <div class="mw-desc">
+          When 'tap' is pressed (or CV gate is ON), audio is looped by the grain
+          length defined by <strong>'cabin fever'</strong>, with speed defined
+          by <strong>'cabin pressure'</strong>.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

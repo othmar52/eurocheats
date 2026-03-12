@@ -1,0 +1,338 @@
+<style>
+  @import url("https://fonts.googleapis.com/css2?family=Jura:wght@500;700&family=Oswald:wght@400&family=Inter:wght@400;700&display=swap");
+
+  .pico-theme {
+    font-family: "Oswald", sans-serif;
+    background-color: #1e1e1e;
+    padding: 2vh 2vw;
+    border-radius: 8px;
+    color: #b0b1b3;
+    box-sizing: border-box;
+
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 90px);
+    min-height: 400px;
+  }
+
+  .pico-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 1vh;
+    border-bottom: 2px solid #5a5c60;
+    padding-bottom: 1vh;
+    flex-shrink: 0;
+  }
+
+  .pico-brand {
+    font-family: "Inter", sans-serif;
+    font-size: clamp(10px, 1vh + 0.5vw, 18px);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #777;
+    margin-bottom: -5px;
+  }
+
+  .pico-title {
+    color: #ffffff;
+    font-family: "Jura", sans-serif;
+    font-size: clamp(24px, 4vh + 2vw, 70px);
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin: 0;
+    line-height: 1;
+  }
+
+  .pico-list {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    width: 100%;
+  }
+
+  .pico-row {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+    border-bottom: 1px solid #333;
+    font-size: clamp(9px, 1.6vh + 0.4vw, 32px);
+    text-transform: uppercase;
+    line-height: 1.1;
+  }
+
+  .pico-row:last-child {
+    border-bottom: none;
+  }
+
+  .pico-row.header {
+    flex-grow: 0;
+    padding-bottom: 1vh;
+    border-bottom: 2px solid #ffffff;
+    font-family: "Jura", sans-serif;
+    font-weight: 700;
+    font-size: clamp(9px, 1.4vh + 0.4vw, 22px);
+    color: #ffffff;
+  }
+
+  /* 5 Spalten Layout */
+  .col-led {
+    width: 10%;
+    min-width: 30px;
+    display: flex;
+    justify-content: center;
+  }
+  .col-algo {
+    width: 22%;
+    color: #e0e0e0;
+    font-weight: bold;
+  }
+  .col-p1 {
+    width: 33%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-right: 5px;
+  }
+  .col-p2 {
+    width: 15%;
+    padding-right: 5px;
+  }
+  .col-set {
+    width: 20%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  /* Kompakte Listen für CHORD-Modus */
+  .param-list {
+    list-style: none;
+    padding: 0;
+    margin: 2px 0 0 0;
+    font-size: 0.55em;
+    line-height: 1.2;
+    color: #aaa;
+    font-family: "Inter", sans-serif;
+    text-transform: none;
+  }
+  .param-list li {
+    margin-bottom: 1px;
+  }
+  .param-list span.num {
+    color: #4a90e2;
+    font-family: monospace;
+    display: inline-block;
+    width: 12px;
+  }
+
+  .sub-note {
+    font-family: "Inter", sans-serif;
+    font-size: 0.55em;
+    color: #888;
+    text-transform: none;
+    margin-top: 2px;
+    display: block;
+  }
+
+  /* 3D RGB LEDs */
+  .rgb-led {
+    width: clamp(10px, 2vh + 0.5vw, 35px);
+    height: clamp(10px, 2vh + 0.5vw, 35px);
+    border-radius: 50%;
+    box-shadow:
+      0 2px 4px rgba(0, 0, 0, 0.6),
+      inset 0 -2px 4px rgba(0, 0, 0, 0.4);
+    border: 1px solid #111;
+  }
+
+  .led-yellow {
+    background: radial-gradient(circle at 35% 35%, #ffffaa, #ffcc00, #997a00);
+    box-shadow:
+      0 0 10px rgba(255, 204, 0, 0.5),
+      inset 0 -2px 4px rgba(0, 0, 0, 0.3);
+  }
+  .led-red {
+    background: radial-gradient(circle at 35% 35%, #ffaaaa, #cc0000, #660000);
+    box-shadow:
+      0 0 10px rgba(204, 0, 0, 0.5),
+      inset 0 -2px 4px rgba(0, 0, 0, 0.3);
+  }
+  .led-orange {
+    background: radial-gradient(circle at 35% 35%, #ffccaa, #ff8800, #994400);
+    box-shadow:
+      0 0 10px rgba(255, 136, 0, 0.5),
+      inset 0 -2px 4px rgba(0, 0, 0, 0.3);
+  }
+  .led-green {
+    background: radial-gradient(circle at 35% 35%, #aaffaa, #00cc00, #006600);
+    box-shadow:
+      0 0 10px rgba(0, 204, 0, 0.5),
+      inset 0 -2px 4px rgba(0, 0, 0, 0.3);
+  }
+  .led-cyan {
+    background: radial-gradient(circle at 35% 35%, #aaffff, #00cccc, #006666);
+    box-shadow:
+      0 0 10px rgba(0, 204, 204, 0.5),
+      inset 0 -2px 4px rgba(0, 0, 0, 0.3);
+  }
+  .led-blue {
+    background: radial-gradient(circle at 35% 35%, #aaaaff, #0000cc, #000066);
+    box-shadow:
+      0 0 10px rgba(0, 0, 204, 0.5),
+      inset 0 -2px 4px rgba(0, 0, 0, 0.3);
+  }
+  .led-purple {
+    background: radial-gradient(circle at 35% 35%, #ddaaff, #8800cc, #440066);
+    box-shadow:
+      0 0 10px rgba(136, 0, 204, 0.5),
+      inset 0 -2px 4px rgba(0, 0, 0, 0.3);
+  }
+  /* NEU: Pink für den Harmonic Modus */
+  .led-pink {
+    background: radial-gradient(circle at 35% 35%, #ff99cc, #e6007e, #800040);
+    box-shadow:
+      0 0 10px rgba(230, 0, 126, 0.5),
+      inset 0 -2px 4px rgba(0, 0, 0, 0.3);
+  }
+
+  /* Print-Optimierung */
+  @media print {
+    .pico-theme {
+      background-color: #fff;
+      padding: 0;
+      color: #000;
+      height: 100vh;
+      border: none;
+    }
+    .pico-title,
+    .pico-row.header {
+      color: #000;
+      border-bottom-color: #000;
+    }
+    .pico-row {
+      color: #222;
+      border-bottom-color: #ccc;
+    }
+    .col-algo {
+      color: #000;
+    }
+    .param-list,
+    .sub-note {
+      color: #444;
+    }
+    .rgb-led {
+      box-shadow: none !important;
+    }
+  }
+</style>
+
+<div class="pico-theme">
+  <div class="pico-header">
+    <div>
+      <div class="pico-brand">Erica Synths</div>
+      <h1 class="pico-title">PICO VOICE</h1>
+    </div>
+  </div>
+
+  <div class="pico-list">
+    <div class="pico-row header">
+      <div class="col-led">LED</div>
+      <div class="col-algo">ALGO</div>
+      <div class="col-p1">PARAM 1</div>
+      <div class="col-p2">PARAM 2</div>
+      <div class="col-set">SETTING</div>
+    </div>
+
+    <div class="pico-row">
+      <div class="col-led"><div class="rgb-led led-yellow"></div></div>
+      <div class="col-algo">KARPLUS STRONG</div>
+      <div class="col-p1">DISTORTION</div>
+      <div class="col-p2">NOISE BURST</div>
+      <div class="col-set">----</div>
+    </div>
+
+    <div class="pico-row">
+      <div class="col-led"><div class="rgb-led led-red"></div></div>
+      <div class="col-algo">CHORD</div>
+      <div class="col-p1">
+        CHORD TYPE
+        <ul class="param-list">
+          <li><span class="num">1.</span> M (MAJOR)</li>
+          <li><span class="num">2.</span> m (MINOR)</li>
+          <li><span class="num">3.</span> 7 (SEVENTH)</li>
+          <li><span class="num">4.</span> m7 (MINOR SEVENTH)</li>
+          <li><span class="num">5.</span> M7 (MAJOR SEVENTH)</li>
+          <li><span class="num">6.</span> mM7 (MINOR MAJOR 7)</li>
+          <li><span class="num">7.</span> aug (AUGMENTED)</li>
+          <li><span class="num">8.</span> dim (DIMINISHED)</li>
+        </ul>
+      </div>
+      <div class="col-p2">RELEASE</div>
+      <div class="col-set">
+        WAVEFORM
+        <ul class="param-list">
+          <li><span class="num">1.</span> SINE</li>
+          <li><span class="num">2.</span> TRIANGLE</li>
+          <li><span class="num">3.</span> SAW</li>
+          <li><span class="num">4.</span> SQUARE</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="pico-row">
+      <div class="col-led"><div class="rgb-led led-orange"></div></div>
+      <div class="col-algo">WAVETABLE</div>
+      <div class="col-p1">WAVE SURF</div>
+      <div class="col-p2">RELEASE</div>
+      <div class="col-set">1 OR 2 NOTES</div>
+    </div>
+
+    <div class="pico-row">
+      <div class="col-led"><div class="rgb-led led-green"></div></div>
+      <div class="col-algo">BASSLINE</div>
+      <div class="col-p1">RESONANCE</div>
+      <div class="col-p2">RELEASE</div>
+      <div class="col-set">SAW/PULSE</div>
+    </div>
+
+    <div class="pico-row">
+      <div class="col-led"><div class="rgb-led led-cyan"></div></div>
+      <div class="col-algo">PWM</div>
+      <div class="col-p1">PWM!</div>
+      <div class="col-p2">RELEASE</div>
+      <div class="col-set">1, 2 OR 3 NOTES</div>
+    </div>
+
+    <div class="pico-row">
+      <div class="col-led"><div class="rgb-led led-blue"></div></div>
+      <div class="col-algo">SUPERSAW</div>
+      <div class="col-p1">DETUNE</div>
+      <div class="col-p2">RELEASE</div>
+      <div class="col-set">
+        PHASE LOCK
+        <span class="sub-note">ON/OFF</span>
+      </div>
+    </div>
+
+    <div class="pico-row">
+      <div class="col-led"><div class="rgb-led led-purple"></div></div>
+      <div class="col-algo">WAVEFOLD</div>
+      <div class="col-p1">FOLD</div>
+      <div class="col-p2">RELEASE</div>
+      <div class="col-set">
+        <span class="sub-note" style="margin-top: 0"
+          >SINE, 2X SINE,<br />TRIANGLE,<br />2X TRIANGLE</span
+        >
+      </div>
+    </div>
+
+    <div class="pico-row">
+      <div class="col-led"><div class="rgb-led led-pink"></div></div>
+      <div class="col-algo">HARMONIC</div>
+      <div class="col-p1">ADD HARMONICS</div>
+      <div class="col-p2">RELEASE</div>
+      <div class="col-set">WAVEFORM</div>
+    </div>
+  </div>
+</div>

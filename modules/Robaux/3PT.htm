@@ -1,0 +1,564 @@
+<style>
+  @import url("https://fonts.googleapis.com/css2?family=Jura:wght@500;700&family=Oswald:wght@400&family=Inter:wght@400;700&display=swap");
+
+  .pt-theme {
+    font-family: "Oswald", sans-serif;
+    background-color: #121212;
+    padding: 2vh 2vw;
+    border-radius: 8px;
+    color: #b0b1b3;
+    box-sizing: border-box;
+
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 90px);
+    min-height: 400px;
+  }
+
+  /* Der Toggle Hack */
+  #pt-toggle {
+    display: none;
+  }
+
+  .pt-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 2vh;
+    border-bottom: 2px solid #5a5c60;
+    padding-bottom: 1vh;
+    flex-shrink: 0;
+  }
+
+  .pt-brand {
+    font-size: clamp(10px, 1vh + 0.5vw, 20px);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #777;
+    margin-bottom: -5px;
+  }
+
+  .pt-title {
+    color: #ffffff;
+    font-family: "Jura", sans-serif;
+    font-size: clamp(24px, 4vh + 2vw, 70px);
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin: 0;
+    line-height: 1;
+  }
+
+  /* Toggle Button Styling */
+  .toggle-btn {
+    background: #222;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: "Jura", sans-serif;
+    font-size: clamp(10px, 1.5vh, 16px);
+    font-weight: 700;
+    color: #fff;
+    border: 1px solid #777;
+    user-select: none;
+    transition: all 0.2s;
+  }
+
+  .toggle-btn:hover {
+    background: #fff;
+    color: #000;
+  }
+
+  #pt-toggle:checked ~ .pt-header .toggle-btn {
+    background: #fff;
+    color: #000;
+    border-color: #fff;
+  }
+  #pt-toggle:checked ~ .pt-header .toggle-btn::after {
+    content: " (ON)";
+  }
+
+  /* Listen-Layout */
+  .pt-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1vh 2vw;
+    flex-grow: 1;
+    height: 100%;
+    align-items: stretch;
+    overflow-y: hidden;
+  }
+
+  @media (min-width: 768px), (orientation: landscape) {
+    .pt-list {
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: repeat(4, 1fr);
+      grid-auto-flow: column;
+    }
+  }
+
+  .pt-row {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-bottom: 1px solid #222;
+    padding: 1vh 1vw;
+  }
+
+  .pt-main-line {
+    display: flex;
+    align-items: center;
+    width: 100%;
+  }
+
+  @media (min-width: 768px), (orientation: landscape) {
+    .pt-row:nth-child(4),
+    .pt-row:nth-child(7) {
+      border-bottom: none;
+    }
+  }
+
+  .col-icon {
+    width: 25%;
+    min-width: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .col-mode {
+    width: 75%;
+    font-size: clamp(14px, 2.5vh + 1.2vw, 45px);
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #ffffff;
+  }
+
+  /* EXPANDED VIEW CSS */
+  #pt-toggle:checked ~ .pt-list {
+    grid-template-columns: 1fr; /* Zwingt alles in 1 Spalte für die Details */
+    grid-auto-rows: auto;
+    overflow-y: auto;
+    padding-right: 5px;
+  }
+
+  #pt-toggle:checked ~ .pt-list .pt-row {
+    justify-content: flex-start;
+    padding: 2vh 0;
+  }
+
+  #pt-toggle:checked ~ .pt-list .pt-row:nth-last-child(2) {
+    border-bottom: 1px solid #222; /* Linien-Korrektur in der 1-Spalten-Ansicht */
+  }
+
+  #pt-toggle:checked ~ .pt-list .pt-desc {
+    display: grid;
+  }
+
+  /* Beschreibungs-Grid */
+  .pt-desc {
+    display: none;
+    grid-template-columns: 55px 1fr;
+    column-gap: 15px;
+    row-gap: 6px;
+    width: 100%;
+    margin-top: 15px;
+    padding-left: clamp(15px, 2vw, 25px);
+    font-family: "Inter", sans-serif;
+    font-size: clamp(10px, 1.4vh + 0.2vw, 20px);
+    color: #b0b1b3;
+  }
+
+  .desc-lbl {
+    font-weight: bold;
+    color: #fff;
+    font-family: "Oswald", sans-serif;
+    letter-spacing: 1px;
+  }
+
+  .desc-val span {
+    color: #777;
+    font-family: monospace;
+  }
+
+  /* Die neue scrollbare Skalen-Tabelle */
+  .scale-table-wrapper {
+    grid-column: 1 / -1;
+    width: 100%;
+    overflow-x: auto;
+    margin-top: 12px;
+    border: 1px solid #333;
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.2);
+  }
+
+  .scale-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: "Inter", sans-serif;
+    font-size: clamp(9px, 1.2vh + 0.2vw, 15px);
+    min-width: 600px; /* Erzwingt horizontales Scrollen auf Smartphones */
+  }
+
+  .scale-table th,
+  .scale-table td {
+    padding: 6px 10px;
+    text-align: left;
+    border-right: 1px solid #333;
+    border-bottom: 1px solid #333;
+  }
+
+  .scale-table th:last-child,
+  .scale-table td:last-child {
+    border-right: none;
+  }
+
+  .scale-table tr:last-child td {
+    border-bottom: none;
+  }
+
+  .scale-table th {
+    background-color: #222;
+    color: #fff;
+    font-family: "Oswald", sans-serif;
+    letter-spacing: 1px;
+  }
+
+  .scale-table td {
+    color: #aaa;
+    white-space: nowrap;
+  }
+
+  .scale-table td span {
+    color: #666;
+    font-family: monospace;
+    margin-right: 4px;
+  }
+
+  /* Hardware-Diffusor-Ringe */
+  .arc-container {
+    position: relative;
+    width: clamp(35px, 8vh + 2vw, 90px);
+    height: clamp(35px, 8vh + 2vw, 90px);
+  }
+
+  .arc {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    border: clamp(3px, 0.5vh + 0.1vw, 7px) solid rgba(255, 255, 255, 0.12);
+    border-bottom-color: transparent !important;
+    transition: all 0.3s ease;
+  }
+
+  .arc.outer {
+    width: 90%;
+    height: 90%;
+  }
+  .arc.middle {
+    width: 60%;
+    height: 60%;
+  }
+  .arc.inner {
+    width: 30%;
+    height: 30%;
+  }
+
+  .arc.active {
+    border-color: #ffffff;
+    filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.9));
+  }
+
+  @media print {
+    .pt-theme {
+      background-color: #fff;
+      padding: 0;
+      color: #000;
+      height: auto;
+      border: none;
+    }
+    .pt-title {
+      color: #000;
+      border-bottom-color: #000;
+    }
+    .pt-row {
+      border-bottom-color: #ccc;
+      page-break-inside: avoid;
+    }
+    .col-mode,
+    .desc-lbl {
+      color: #000;
+    }
+    .desc-val {
+      color: #333;
+    }
+    .arc {
+      border-color: #eee;
+    }
+    .arc.active {
+      border-color: #000;
+      filter: none;
+    }
+    .toggle-btn {
+      display: none !important;
+    }
+    .pt-list {
+      grid-template-columns: 1fr;
+      overflow: visible;
+    }
+    .pt-desc {
+      display: grid !important;
+    }
+    .scale-table-wrapper {
+      border-color: #ccc;
+      overflow-x: visible;
+      background: none;
+    }
+    .scale-table {
+      min-width: auto;
+    }
+    .scale-table th {
+      background-color: #eee;
+      color: #000;
+      border-color: #ccc;
+    }
+    .scale-table td {
+      color: #222;
+      border-color: #ccc;
+      white-space: normal;
+    }
+    .scale-table td span {
+      color: #888;
+    }
+  }
+</style>
+
+<div class="pt-theme">
+  <input type="checkbox" id="pt-toggle" />
+
+  <div class="pt-header">
+    <div>
+      <div class="pt-brand">Robaux</div>
+      <h1 class="pt-title">3PT</h1>
+    </div>
+    <label for="pt-toggle" class="toggle-btn">SHOW DETAILS</label>
+  </div>
+
+  <div class="pt-list">
+    <div class="pt-row">
+      <div class="pt-main-line">
+        <div class="col-icon">
+          <div class="arc-container">
+            <div class="arc outer active"></div>
+            <div class="arc middle"></div>
+            <div class="arc inner"></div>
+          </div>
+        </div>
+        <div class="col-mode">Tripot</div>
+      </div>
+      <div class="pt-desc">
+        <div class="desc-lbl">BIG/CV</div>
+        <div class="desc-val">CV Amount</div>
+        <div class="desc-lbl">ROW 1</div>
+        <div class="desc-val">Minimum (0V to 5V)</div>
+        <div class="desc-lbl">ROW 2</div>
+        <div class="desc-val">Offset (-50 to +50)</div>
+        <div class="desc-lbl">ROW 3</div>
+        <div class="desc-val">Maximum (0V to 5V)</div>
+      </div>
+    </div>
+
+    <div class="pt-row">
+      <div class="pt-main-line">
+        <div class="col-icon">
+          <div class="arc-container">
+            <div class="arc outer"></div>
+            <div class="arc middle active"></div>
+            <div class="arc inner"></div>
+          </div>
+        </div>
+        <div class="col-mode">LFO (unipolar)</div>
+      </div>
+      <div class="pt-desc">
+        <div class="desc-lbl">BIG/CV</div>
+        <div class="desc-val">Main Frequency</div>
+        <div class="desc-lbl">ROW 1</div>
+        <div class="desc-val">Frequency Multiplier</div>
+        <div class="desc-lbl">ROW 2</div>
+        <div class="desc-val">Waveform (Sine ↔ Square)</div>
+        <div class="desc-lbl">ROW 3</div>
+        <div class="desc-val">Slew Limit</div>
+      </div>
+    </div>
+
+    <div class="pt-row">
+      <div class="pt-main-line">
+        <div class="col-icon">
+          <div class="arc-container">
+            <div class="arc outer"></div>
+            <div class="arc middle"></div>
+            <div class="arc inner active"></div>
+          </div>
+        </div>
+        <div class="col-mode">Chord Progression</div>
+      </div>
+      <div class="pt-desc">
+        <div class="desc-lbl">CV IN</div>
+        <div class="desc-val">1V/Octave</div>
+        <div class="desc-lbl">ROW 1</div>
+        <div class="desc-val">
+          <span>[L]</span> Root <span>[M]</span> Maj/Min
+          <span>[R]</span> Variation
+        </div>
+        <div class="desc-lbl">ROW 2</div>
+        <div class="desc-val">Note Compress</div>
+        <div class="desc-lbl">ROW 3</div>
+        <div class="desc-val">Note Offset</div>
+      </div>
+    </div>
+
+    <div class="pt-row">
+      <div class="pt-main-line">
+        <div class="col-icon">
+          <div class="arc-container">
+            <div class="arc outer active"></div>
+            <div class="arc middle active"></div>
+            <div class="arc inner"></div>
+          </div>
+        </div>
+        <div class="col-mode">Quantizer</div>
+      </div>
+      <div class="pt-desc">
+        <div class="desc-lbl">CV IN</div>
+        <div class="desc-val">1V/Octave</div>
+        <div class="desc-lbl">ROW 1</div>
+        <div class="desc-val">Root Key (C to B)</div>
+        <div class="desc-lbl">ROW 2</div>
+        <div class="desc-val">Scale Bank (1 to 5)</div>
+        <div class="desc-lbl">ROW 3</div>
+        <div class="desc-val">Scale (1 to 5)</div>
+
+        <div class="scale-table-wrapper">
+          <table class="scale-table">
+            <thead>
+              <tr>
+                <th>BANK 1</th>
+                <th>BANK 2</th>
+                <th>BANK 3</th>
+                <th>BANK 4</th>
+                <th>BANK 5</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span>1.</span>Chromatic</td>
+                <td><span>1.</span>Wholetone</td>
+                <td><span>1.</span>Phrygian</td>
+                <td><span>1.</span>Raga Bhairav</td>
+                <td><span>1.</span>Arabian</td>
+              </tr>
+              <tr>
+                <td><span>2.</span>Major Pentatonic</td>
+                <td><span>2.</span>Diminish</td>
+                <td><span>2.</span>Lydian</td>
+                <td><span>2.</span>Raga Gamanasrama</td>
+                <td><span>2.</span>Egyptian</td>
+              </tr>
+              <tr>
+                <td><span>3.</span>Minor Pentatonic</td>
+                <td><span>3.</span>Combination Diminish</td>
+                <td><span>3.</span>Mixolydian</td>
+                <td><span>3.</span>Raga Todi</td>
+                <td><span>3.</span>Hawaiian</td>
+              </tr>
+              <tr>
+                <td><span>4.</span>Major Blues</td>
+                <td><span>4.</span>Ionian</td>
+                <td><span>4.</span>Aeolian</td>
+                <td><span>4.</span>Spanish</td>
+                <td><span>4.</span>Bali Pelog</td>
+              </tr>
+              <tr>
+                <td><span>5.</span>Minor Blues</td>
+                <td><span>5.</span>Dorian</td>
+                <td><span>5.</span>Locrian</td>
+                <td><span>5.</span>Gypsy</td>
+                <td><span>5.</span>Japanese</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="pt-row">
+      <div class="pt-main-line">
+        <div class="col-icon">
+          <div class="arc-container">
+            <div class="arc outer active"></div>
+            <div class="arc middle"></div>
+            <div class="arc inner active"></div>
+          </div>
+        </div>
+        <div class="col-mode">Random Generator</div>
+      </div>
+      <div class="pt-desc">
+        <div class="desc-lbl">CV IN</div>
+        <div class="desc-val">Trigger Input</div>
+        <div class="desc-lbl">ROW 1</div>
+        <div class="desc-val">Minimum Value</div>
+        <div class="desc-lbl">ROW 2</div>
+        <div class="desc-val">Maximum Value</div>
+        <div class="desc-lbl">ROW 3</div>
+        <div class="desc-val">Mode (Linear, Chr, Maj, Min)</div>
+      </div>
+    </div>
+
+    <div class="pt-row">
+      <div class="pt-main-line">
+        <div class="col-icon">
+          <div class="arc-container">
+            <div class="arc outer"></div>
+            <div class="arc middle active"></div>
+            <div class="arc inner active"></div>
+          </div>
+        </div>
+        <div class="col-mode">Sequencer</div>
+      </div>
+      <div class="pt-desc">
+        <div class="desc-lbl">CV IN</div>
+        <div class="desc-val">Clock Input</div>
+        <div class="desc-lbl">ROW 1</div>
+        <div class="desc-val">Steps 1, 2, 3</div>
+        <div class="desc-lbl">ROW 2</div>
+        <div class="desc-val">Step 8 | Seq. Length | Step 4</div>
+        <div class="desc-lbl">ROW 3</div>
+        <div class="desc-val">Steps 7, 6, 5</div>
+      </div>
+    </div>
+
+    <div class="pt-row">
+      <div class="pt-main-line">
+        <div class="col-icon">
+          <div class="arc-container">
+            <div class="arc outer active"></div>
+            <div class="arc middle active"></div>
+            <div class="arc inner active"></div>
+          </div>
+        </div>
+        <div class="col-mode">Euclidean Rhythm</div>
+      </div>
+      <div class="pt-desc">
+        <div class="desc-lbl">CV IN</div>
+        <div class="desc-val">Clock Input</div>
+        <div class="desc-lbl">ROW 1</div>
+        <div class="desc-val">Length (1 to 16)</div>
+        <div class="desc-lbl">ROW 2</div>
+        <div class="desc-val">Pulses (1 to 16)</div>
+        <div class="desc-lbl">ROW 3</div>
+        <div class="desc-val">Offset</div>
+      </div>
+    </div>
+  </div>
+</div>

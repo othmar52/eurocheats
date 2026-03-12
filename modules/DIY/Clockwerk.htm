@@ -1,0 +1,326 @@
+<style>
+  @import url("https://fonts.googleapis.com/css2?family=Jura:wght@500;700&family=Oswald:wght@400&family=Inter:wght@400;700&display=swap");
+
+  .cw-theme {
+    font-family: "Inter", sans-serif;
+    background-color: #161616; /* Dunkler Hintergrund für starken Kontrast zum weißen Panel */
+    padding: 2vh 1vw;
+    border-radius: 8px;
+    color: #e0e0e0;
+    box-sizing: border-box;
+
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 90px);
+    min-height: 500px;
+  }
+
+  .cw-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 2vh;
+    border-bottom: 2px solid #333;
+    padding-bottom: 1vh;
+    padding-left: 1vw;
+    flex-shrink: 0;
+  }
+
+  .cw-brand {
+    font-size: clamp(10px, 1vh + 0.5vw, 18px);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #888;
+    font-family: "Oswald", sans-serif;
+    margin-bottom: -5px;
+  }
+
+  .cw-title {
+    color: #ffffff;
+    font-family: "Jura", sans-serif;
+    font-size: clamp(24px, 4vh + 2vw, 70px);
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin: 0;
+    line-height: 1;
+  }
+
+  .cw-patchbay {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    width: 100%;
+  }
+
+  .cw-row {
+    display: flex;
+    flex-grow: 1;
+    align-items: center;
+  }
+
+  /* Das virtuelle weiße Modul-Panel in der Mitte */
+  .cw-panel {
+    background: linear-gradient(
+      90deg,
+      #d4d4d4 0%,
+      #f0f0f0 10%,
+      #ffffff 50%,
+      #f0f0f0 90%,
+      #d4d4d4 100%
+    );
+    display: flex;
+    justify-content: center;
+    gap: clamp(15px, 4vw, 50px); /* Abstand zwischen den Buchsen wächst mit */
+    padding: 0.5vh 2vw;
+    border-left: 1px solid #999;
+    border-right: 1px solid #999;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+    height: 100%;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* Oben und unten abgerundet wie ein echtes Panel */
+  .cw-row:first-child .cw-panel {
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+  }
+  .cw-row:last-child .cw-panel {
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+  }
+
+  /* Die Buchsen (Jacks) */
+  .cw-jack {
+    width: clamp(20px, 4vh + 1vw, 50px);
+    height: clamp(20px, 4vh + 1vw, 50px);
+    background-color: #0a0a0a;
+    border-radius: 50%;
+    box-shadow:
+      inset 0 4px 6px rgba(0, 0, 0, 0.9),
+      0 1px 1px rgba(255, 255, 255, 1);
+    border: clamp(2px, 0.3vh, 4px) solid #ccc;
+    position: relative;
+  }
+
+  .cw-jack::after {
+    content: "";
+    position: absolute;
+    top: 25%;
+    left: 25%;
+    width: 50%;
+    height: 50%;
+    border-radius: 50%;
+    background-color: #000;
+    box-shadow: inset 0 2px 4px #000;
+  }
+
+  /* Text-Labels links und rechts */
+  .cw-label {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 2vw;
+  }
+
+  .cw-label.left {
+    text-align: right;
+  }
+  .cw-label.right {
+    text-align: left;
+  }
+
+  .mod-name {
+    font-family: "Oswald", sans-serif;
+    font-size: clamp(11px, 2vh + 0.8vw, 35px);
+    font-weight: bold;
+    color: #ffffff;
+    text-transform: uppercase;
+    line-height: 1.1;
+    word-wrap: break-word;
+    hyphens: auto;
+  }
+
+  .mod-signal {
+    font-size: clamp(9px, 1.2vh + 0.4vw, 20px);
+    font-family: "Jura", sans-serif;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-top: 2px;
+  }
+
+  /* Farbkodierung für sofortige Erkennung */
+  .signal-clock {
+    color: #ff8800;
+  } /* Orange für Clock */
+  .signal-reset {
+    color: #00bfff;
+  } /* Blau für Reset */
+  .signal-none {
+    color: #444;
+  } /* Grau für unbenutzt */
+
+  .mod-empty {
+    color: #444;
+    font-style: italic;
+  }
+
+  /* Print-Optimierung */
+  @media print {
+    .cw-theme {
+      background-color: #fff;
+      padding: 0;
+      color: #000;
+      height: 100vh;
+      border: none;
+    }
+    .cw-title,
+    .mod-name {
+      color: #000;
+    }
+    .cw-header {
+      border-bottom-color: #000;
+    }
+    .cw-panel {
+      box-shadow: none;
+      border: 2px solid #000;
+      background: #fff;
+    }
+    .cw-jack {
+      border-color: #666;
+    }
+  }
+</style>
+
+<div class="cw-theme">
+  <div class="cw-header">
+    <div>
+      <div class="cw-brand">DIY Custom</div>
+      <h1 class="cw-title">CLOCKWERK</h1>
+    </div>
+  </div>
+
+  <div class="cw-patchbay">
+    <div class="cw-row">
+      <div class="cw-label left">
+        <div class="mod-name">Eloquencer</div>
+        <div class="mod-signal signal-clock">CLOCK</div>
+      </div>
+      <div class="cw-panel">
+        <div class="cw-jack"></div>
+        <div class="cw-jack"></div>
+      </div>
+      <div class="cw-label right">
+        <div class="mod-name">Varigate</div>
+        <div class="mod-signal signal-clock">CLOCK</div>
+      </div>
+    </div>
+
+    <div class="cw-row">
+      <div class="cw-label left">
+        <div class="mod-name">Time Wizard</div>
+        <div class="mod-signal signal-reset">RESET</div>
+      </div>
+      <div class="cw-panel">
+        <div class="cw-jack"></div>
+        <div class="cw-jack"></div>
+      </div>
+      <div class="cw-label right">
+        <div class="mod-name">Time Wizard</div>
+        <div class="mod-signal signal-clock">CLOCK</div>
+      </div>
+    </div>
+
+    <div class="cw-row">
+      <div class="cw-label left">
+        <div class="mod-name">4ms Divider</div>
+        <div class="mod-signal signal-reset">RESET</div>
+      </div>
+      <div class="cw-panel">
+        <div class="cw-jack"></div>
+        <div class="cw-jack"></div>
+      </div>
+      <div class="cw-label right">
+        <div class="mod-name">4ms Divider</div>
+        <div class="mod-signal signal-clock">CLOCK</div>
+      </div>
+    </div>
+
+    <div class="cw-row">
+      <div class="cw-label left">
+        <div class="mod-name">Euclidean Circles</div>
+        <div class="mod-signal signal-reset">RESET</div>
+      </div>
+      <div class="cw-panel">
+        <div class="cw-jack"></div>
+        <div class="cw-jack"></div>
+      </div>
+      <div class="cw-label right">
+        <div class="mod-name">Euclidean Circles</div>
+        <div class="mod-signal signal-clock">CLOCK</div>
+      </div>
+    </div>
+
+    <div class="cw-row">
+      <div class="cw-label left">
+        <div class="mod-name">Ikerion Div 1</div>
+        <div class="mod-signal signal-reset">RESET</div>
+      </div>
+      <div class="cw-panel">
+        <div class="cw-jack"></div>
+        <div class="cw-jack"></div>
+      </div>
+      <div class="cw-label right">
+        <div class="mod-name">Ikerion Div 1</div>
+        <div class="mod-signal signal-clock">CLOCK</div>
+      </div>
+    </div>
+
+    <div class="cw-row">
+      <div class="cw-label left">
+        <div class="mod-name">Ikerion Div 2</div>
+        <div class="mod-signal signal-reset">RESET</div>
+      </div>
+      <div class="cw-panel">
+        <div class="cw-jack"></div>
+        <div class="cw-jack"></div>
+      </div>
+      <div class="cw-label right">
+        <div class="mod-name">Ikerion Div 2</div>
+        <div class="mod-signal signal-clock">CLOCK</div>
+      </div>
+    </div>
+
+    <div class="cw-row">
+      <div class="cw-label left">
+        <div class="mod-name mod-empty">Unassigned</div>
+        <div class="mod-signal signal-none">---</div>
+      </div>
+      <div class="cw-panel">
+        <div class="cw-jack"></div>
+        <div class="cw-jack"></div>
+      </div>
+      <div class="cw-label right">
+        <div class="mod-name mod-empty">Unassigned</div>
+        <div class="mod-signal signal-none">---</div>
+      </div>
+    </div>
+
+    <div class="cw-row">
+      <div class="cw-label left">
+        <div class="mod-name">Melodicer</div>
+        <div class="mod-signal signal-reset">RESET</div>
+      </div>
+      <div class="cw-panel">
+        <div class="cw-jack"></div>
+        <div class="cw-jack"></div>
+      </div>
+      <div class="cw-label right">
+        <div class="mod-name">Melodicer</div>
+        <div class="mod-signal signal-clock">CLOCK</div>
+      </div>
+    </div>
+  </div>
+</div>
